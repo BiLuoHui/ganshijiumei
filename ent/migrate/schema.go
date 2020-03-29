@@ -38,10 +38,27 @@ var (
 		PrimaryKey:  []*schema.Column{MenPaisColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// WuGongsColumns holds the columns for the "wu_gongs" table.
+	WuGongsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "name", Type: field.TypeString},
+		{Name: "damage", Type: field.TypeInt},
+		{Name: "level", Type: field.TypeUint8},
+	}
+	// WuGongsTable holds the schema information for the "wu_gongs" table.
+	WuGongsTable = &schema.Table{
+		Name:        "wu_gongs",
+		Columns:     WuGongsColumns,
+		PrimaryKey:  []*schema.Column{WuGongsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		JiangHuRensTable,
 		MenPaisTable,
+		WuGongsTable,
 	}
 )
 

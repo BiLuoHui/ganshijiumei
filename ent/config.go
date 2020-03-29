@@ -26,6 +26,7 @@ type config struct {
 type hooks struct {
 	JiangHuRen []ent.Hook
 	MenPai     []ent.Hook
+	WuGong     []ent.Hook
 }
 
 // Options applies the options on the config object.

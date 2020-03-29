@@ -8,6 +8,7 @@ import (
 
 	"github.com/BiLuoHui/ganshijiumei/ent/jianghuren"
 	"github.com/BiLuoHui/ganshijiumei/ent/menpai"
+	"github.com/BiLuoHui/ganshijiumei/ent/wugong"
 
 	"github.com/facebookincubator/ent"
 )
@@ -23,6 +24,7 @@ const (
 	// Node types.
 	TypeJiangHuRen = "JiangHuRen"
 	TypeMenPai     = "MenPai"
+	TypeWuGong     = "WuGong"
 )
 
 // JiangHuRenMutation represents an operation that mutate the JiangHuRens
@@ -731,4 +733,444 @@ func (m *MenPaiMutation) ResetEdge(name string) error {
 	switch name {
 	}
 	return fmt.Errorf("unknown MenPai edge %s", name)
+}
+
+// WuGongMutation represents an operation that mutate the WuGongs
+// nodes in the graph.
+type WuGongMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	created_at    *time.Time
+	updated_at    *time.Time
+	name          *string
+	damage        *int
+	adddamage     *int
+	level         *uint8
+	addlevel      *uint8
+	clearedFields map[string]struct{}
+}
+
+var _ ent.Mutation = (*WuGongMutation)(nil)
+
+// newWuGongMutation creates new mutation for $n.Name.
+func newWuGongMutation(c config, op Op) *WuGongMutation {
+	return &WuGongMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeWuGong,
+		clearedFields: make(map[string]struct{}),
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m WuGongMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m WuGongMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *WuGongMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetCreatedAt sets the created_at field.
+func (m *WuGongMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the created_at value in the mutation.
+func (m *WuGongMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt reset all changes of the created_at field.
+func (m *WuGongMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the updated_at field.
+func (m *WuGongMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the updated_at value in the mutation.
+func (m *WuGongMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt reset all changes of the updated_at field.
+func (m *WuGongMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// SetName sets the name field.
+func (m *WuGongMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the name value in the mutation.
+func (m *WuGongMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetName reset all changes of the name field.
+func (m *WuGongMutation) ResetName() {
+	m.name = nil
+}
+
+// SetDamage sets the damage field.
+func (m *WuGongMutation) SetDamage(i int) {
+	m.damage = &i
+	m.adddamage = nil
+}
+
+// Damage returns the damage value in the mutation.
+func (m *WuGongMutation) Damage() (r int, exists bool) {
+	v := m.damage
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// AddDamage adds i to damage.
+func (m *WuGongMutation) AddDamage(i int) {
+	if m.adddamage != nil {
+		*m.adddamage += i
+	} else {
+		m.adddamage = &i
+	}
+}
+
+// AddedDamage returns the value that was added to the damage field in this mutation.
+func (m *WuGongMutation) AddedDamage() (r int, exists bool) {
+	v := m.adddamage
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDamage reset all changes of the damage field.
+func (m *WuGongMutation) ResetDamage() {
+	m.damage = nil
+	m.adddamage = nil
+}
+
+// SetLevel sets the level field.
+func (m *WuGongMutation) SetLevel(u uint8) {
+	m.level = &u
+	m.addlevel = nil
+}
+
+// Level returns the level value in the mutation.
+func (m *WuGongMutation) Level() (r uint8, exists bool) {
+	v := m.level
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// AddLevel adds u to level.
+func (m *WuGongMutation) AddLevel(u uint8) {
+	if m.addlevel != nil {
+		*m.addlevel += u
+	} else {
+		m.addlevel = &u
+	}
+}
+
+// AddedLevel returns the value that was added to the level field in this mutation.
+func (m *WuGongMutation) AddedLevel() (r uint8, exists bool) {
+	v := m.addlevel
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetLevel reset all changes of the level field.
+func (m *WuGongMutation) ResetLevel() {
+	m.level = nil
+	m.addlevel = nil
+}
+
+// Op returns the operation name.
+func (m *WuGongMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (WuGong).
+func (m *WuGongMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *WuGongMutation) Fields() []string {
+	fields := make([]string, 0, 5)
+	if m.created_at != nil {
+		fields = append(fields, wugong.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, wugong.FieldUpdatedAt)
+	}
+	if m.name != nil {
+		fields = append(fields, wugong.FieldName)
+	}
+	if m.damage != nil {
+		fields = append(fields, wugong.FieldDamage)
+	}
+	if m.level != nil {
+		fields = append(fields, wugong.FieldLevel)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *WuGongMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case wugong.FieldCreatedAt:
+		return m.CreatedAt()
+	case wugong.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case wugong.FieldName:
+		return m.Name()
+	case wugong.FieldDamage:
+		return m.Damage()
+	case wugong.FieldLevel:
+		return m.Level()
+	}
+	return nil, false
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *WuGongMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case wugong.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case wugong.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case wugong.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case wugong.FieldDamage:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDamage(v)
+		return nil
+	case wugong.FieldLevel:
+		v, ok := value.(uint8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLevel(v)
+		return nil
+	}
+	return fmt.Errorf("unknown WuGong field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *WuGongMutation) AddedFields() []string {
+	var fields []string
+	if m.adddamage != nil {
+		fields = append(fields, wugong.FieldDamage)
+	}
+	if m.addlevel != nil {
+		fields = append(fields, wugong.FieldLevel)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *WuGongMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case wugong.FieldDamage:
+		return m.AddedDamage()
+	case wugong.FieldLevel:
+		return m.AddedLevel()
+	}
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *WuGongMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case wugong.FieldDamage:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDamage(v)
+		return nil
+	case wugong.FieldLevel:
+		v, ok := value.(uint8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddLevel(v)
+		return nil
+	}
+	return fmt.Errorf("unknown WuGong numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *WuGongMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *WuGongMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *WuGongMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown WuGong nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *WuGongMutation) ResetField(name string) error {
+	switch name {
+	case wugong.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case wugong.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case wugong.FieldName:
+		m.ResetName()
+		return nil
+	case wugong.FieldDamage:
+		m.ResetDamage()
+		return nil
+	case wugong.FieldLevel:
+		m.ResetLevel()
+		return nil
+	}
+	return fmt.Errorf("unknown WuGong field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *WuGongMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *WuGongMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *WuGongMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *WuGongMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *WuGongMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *WuGongMutation) EdgeCleared(name string) bool {
+	switch name {
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *WuGongMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown WuGong unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *WuGongMutation) ResetEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown WuGong edge %s", name)
 }

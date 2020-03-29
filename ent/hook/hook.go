@@ -35,6 +35,19 @@ func (f MenPaiFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, erro
 	return f(ctx, mv)
 }
 
+// The WuGongFunc type is an adapter to allow the use of ordinary
+// function as WuGong mutator.
+type WuGongFunc func(context.Context, *ent.WuGongMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f WuGongFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.WuGongMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.WuGongMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // On executes the given hook only of the given operation.
 //
 //	hook.On(Log, ent.Delete|ent.Create)

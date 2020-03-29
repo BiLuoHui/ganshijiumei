@@ -15,6 +15,8 @@ type Tx struct {
 	JiangHuRen *JiangHuRenClient
 	// MenPai is the client for interacting with the MenPai builders.
 	MenPai *MenPaiClient
+	// WuGong is the client for interacting with the WuGong builders.
+	WuGong *WuGongClient
 }
 
 // Commit commits the transaction.
@@ -37,6 +39,7 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.JiangHuRen = NewJiangHuRenClient(tx.config)
 	tx.MenPai = NewMenPaiClient(tx.config)
+	tx.WuGong = NewWuGongClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

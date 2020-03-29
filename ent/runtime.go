@@ -8,6 +8,7 @@ import (
 	"github.com/BiLuoHui/ganshijiumei/ent/jianghuren"
 	"github.com/BiLuoHui/ganshijiumei/ent/menpai"
 	"github.com/BiLuoHui/ganshijiumei/ent/schema"
+	"github.com/BiLuoHui/ganshijiumei/ent/wugong"
 
 	"github.com/facebookincubator/ent"
 )
@@ -52,4 +53,28 @@ func init() {
 	menpaiDescAddress := menpaiFields[1].Descriptor()
 	// menpai.DefaultAddress holds the default value on creation for the address field.
 	menpai.DefaultAddress = menpaiDescAddress.Default.(string)
+	wugongMixin := schema.WuGong{}.Mixin()
+	wugongMixinFields := [...][]ent.Field{
+		wugongMixin[0].Fields(),
+	}
+	wugongFields := schema.WuGong{}.Fields()
+	_ = wugongFields
+	// wugongDescCreatedAt is the schema descriptor for created_at field.
+	wugongDescCreatedAt := wugongMixinFields[0][0].Descriptor()
+	// wugong.DefaultCreatedAt holds the default value on creation for the created_at field.
+	wugong.DefaultCreatedAt = wugongDescCreatedAt.Default.(func() time.Time)
+	// wugongDescUpdatedAt is the schema descriptor for updated_at field.
+	wugongDescUpdatedAt := wugongMixinFields[0][1].Descriptor()
+	// wugong.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	wugong.DefaultUpdatedAt = wugongDescUpdatedAt.Default.(func() time.Time)
+	// wugong.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	wugong.UpdateDefaultUpdatedAt = wugongDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// wugongDescDamage is the schema descriptor for damage field.
+	wugongDescDamage := wugongFields[1].Descriptor()
+	// wugong.DefaultDamage holds the default value on creation for the damage field.
+	wugong.DefaultDamage = wugongDescDamage.Default.(int)
+	// wugongDescLevel is the schema descriptor for level field.
+	wugongDescLevel := wugongFields[2].Descriptor()
+	// wugong.LevelValidator is a validator for the "level" field. It is called by the builders before save.
+	wugong.LevelValidator = wugongDescLevel.Validators[0].(func(uint8) error)
 }

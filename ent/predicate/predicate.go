@@ -11,3 +11,6 @@ type JiangHuRen func(*sql.Selector)
 
 // MenPai is the predicate function for menpai builders.
 type MenPai func(*sql.Selector)
+
+// WuGong is the predicate function for wugong builders.
+type WuGong func(*sql.Selector)

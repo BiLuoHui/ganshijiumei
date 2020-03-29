@@ -11,6 +11,7 @@ import (
 
 	"github.com/BiLuoHui/ganshijiumei/ent/jianghuren"
 	"github.com/BiLuoHui/ganshijiumei/ent/menpai"
+	"github.com/BiLuoHui/ganshijiumei/ent/wugong"
 
 	"github.com/facebookincubator/ent/dialect"
 	"github.com/facebookincubator/ent/dialect/sql"
@@ -25,6 +26,8 @@ type Client struct {
 	JiangHuRen *JiangHuRenClient
 	// MenPai is the client for interacting with the MenPai builders.
 	MenPai *MenPaiClient
+	// WuGong is the client for interacting with the WuGong builders.
+	WuGong *WuGongClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -40,6 +43,7 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.JiangHuRen = NewJiangHuRenClient(c.config)
 	c.MenPai = NewMenPaiClient(c.config)
+	c.WuGong = NewWuGongClient(c.config)
 }
 
 // Open opens a connection to the database specified by the driver name and a
@@ -72,6 +76,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		config:     cfg,
 		JiangHuRen: NewJiangHuRenClient(cfg),
 		MenPai:     NewMenPaiClient(cfg),
+		WuGong:     NewWuGongClient(cfg),
 	}, nil
 }
 
@@ -102,6 +107,7 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	c.JiangHuRen.Use(hooks...)
 	c.MenPai.Use(hooks...)
+	c.WuGong.Use(hooks...)
 }
 
 // JiangHuRenClient is a client for the JiangHuRen schema.
@@ -268,4 +274,87 @@ func (c *MenPaiClient) GetX(ctx context.Context, id int) *MenPai {
 // Hooks returns the client hooks.
 func (c *MenPaiClient) Hooks() []Hook {
 	return c.hooks.MenPai
+}
+
+// WuGongClient is a client for the WuGong schema.
+type WuGongClient struct {
+	config
+}
+
+// NewWuGongClient returns a client for the WuGong from the given config.
+func NewWuGongClient(c config) *WuGongClient {
+	return &WuGongClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `wugong.Hooks(f(g(h())))`.
+func (c *WuGongClient) Use(hooks ...Hook) {
+	c.hooks.WuGong = append(c.hooks.WuGong, hooks...)
+}
+
+// Create returns a create builder for WuGong.
+func (c *WuGongClient) Create() *WuGongCreate {
+	mutation := newWuGongMutation(c.config, OpCreate)
+	return &WuGongCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for WuGong.
+func (c *WuGongClient) Update() *WuGongUpdate {
+	mutation := newWuGongMutation(c.config, OpUpdate)
+	return &WuGongUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *WuGongClient) UpdateOne(wg *WuGong) *WuGongUpdateOne {
+	return c.UpdateOneID(wg.ID)
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *WuGongClient) UpdateOneID(id int) *WuGongUpdateOne {
+	mutation := newWuGongMutation(c.config, OpUpdateOne)
+	mutation.id = &id
+	return &WuGongUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for WuGong.
+func (c *WuGongClient) Delete() *WuGongDelete {
+	mutation := newWuGongMutation(c.config, OpDelete)
+	return &WuGongDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *WuGongClient) DeleteOne(wg *WuGong) *WuGongDeleteOne {
+	return c.DeleteOneID(wg.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *WuGongClient) DeleteOneID(id int) *WuGongDeleteOne {
+	builder := c.Delete().Where(wugong.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &WuGongDeleteOne{builder}
+}
+
+// Create returns a query builder for WuGong.
+func (c *WuGongClient) Query() *WuGongQuery {
+	return &WuGongQuery{config: c.config}
+}
+
+// Get returns a WuGong entity by its id.
+func (c *WuGongClient) Get(ctx context.Context, id int) (*WuGong, error) {
+	return c.Query().Where(wugong.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *WuGongClient) GetX(ctx context.Context, id int) *WuGong {
+	wg, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return wg
+}
+
+// Hooks returns the client hooks.
+func (c *WuGongClient) Hooks() []Hook {
+	return c.hooks.WuGong
 }

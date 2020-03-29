@@ -191,3 +191,27 @@ func (f MenPaiMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.MenPaiMutation", m)
 }
+
+// The WuGongQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type WuGongQueryRuleFunc func(context.Context, *ent.WuGongQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f WuGongQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.WuGongQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.WuGongQuery", q)
+}
+
+// The WuGongMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type WuGongMutationRuleFunc func(context.Context, *ent.WuGongMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f WuGongMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.WuGongMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.WuGongMutation", m)
+}
