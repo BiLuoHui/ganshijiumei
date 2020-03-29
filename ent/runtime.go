@@ -8,6 +8,7 @@ import (
 	"github.com/BiLuoHui/ganshijiumei/ent/jianghuren"
 	"github.com/BiLuoHui/ganshijiumei/ent/menpai"
 	"github.com/BiLuoHui/ganshijiumei/ent/schema"
+	"github.com/BiLuoHui/ganshijiumei/ent/weapon"
 	"github.com/BiLuoHui/ganshijiumei/ent/wugong"
 
 	"github.com/facebookincubator/ent"
@@ -53,6 +54,30 @@ func init() {
 	menpaiDescAddress := menpaiFields[1].Descriptor()
 	// menpai.DefaultAddress holds the default value on creation for the address field.
 	menpai.DefaultAddress = menpaiDescAddress.Default.(string)
+	weaponMixin := schema.Weapon{}.Mixin()
+	weaponMixinFields := [...][]ent.Field{
+		weaponMixin[0].Fields(),
+	}
+	weaponFields := schema.Weapon{}.Fields()
+	_ = weaponFields
+	// weaponDescCreatedAt is the schema descriptor for created_at field.
+	weaponDescCreatedAt := weaponMixinFields[0][0].Descriptor()
+	// weapon.DefaultCreatedAt holds the default value on creation for the created_at field.
+	weapon.DefaultCreatedAt = weaponDescCreatedAt.Default.(func() time.Time)
+	// weaponDescUpdatedAt is the schema descriptor for updated_at field.
+	weaponDescUpdatedAt := weaponMixinFields[0][1].Descriptor()
+	// weapon.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	weapon.DefaultUpdatedAt = weaponDescUpdatedAt.Default.(func() time.Time)
+	// weapon.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	weapon.UpdateDefaultUpdatedAt = weaponDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// weaponDescLevel is the schema descriptor for level field.
+	weaponDescLevel := weaponFields[1].Descriptor()
+	// weapon.DefaultLevel holds the default value on creation for the level field.
+	weapon.DefaultLevel = weaponDescLevel.Default.(int)
+	// weaponDescCategory is the schema descriptor for category field.
+	weaponDescCategory := weaponFields[2].Descriptor()
+	// weapon.DefaultCategory holds the default value on creation for the category field.
+	weapon.DefaultCategory = weaponDescCategory.Default.(int)
 	wugongMixin := schema.WuGong{}.Mixin()
 	wugongMixinFields := [...][]ent.Field{
 		wugongMixin[0].Fields(),

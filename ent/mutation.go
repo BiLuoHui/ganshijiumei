@@ -8,6 +8,7 @@ import (
 
 	"github.com/BiLuoHui/ganshijiumei/ent/jianghuren"
 	"github.com/BiLuoHui/ganshijiumei/ent/menpai"
+	"github.com/BiLuoHui/ganshijiumei/ent/weapon"
 	"github.com/BiLuoHui/ganshijiumei/ent/wugong"
 
 	"github.com/facebookincubator/ent"
@@ -24,6 +25,7 @@ const (
 	// Node types.
 	TypeJiangHuRen = "JiangHuRen"
 	TypeMenPai     = "MenPai"
+	TypeWeapon     = "Weapon"
 	TypeWuGong     = "WuGong"
 )
 
@@ -31,15 +33,32 @@ const (
 // nodes in the graph.
 type JiangHuRenMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	created_at    *time.Time
-	updated_at    *time.Time
-	name          *string
-	age           *uint
-	addage        *uint
-	clearedFields map[string]struct{}
+	op                 Op
+	typ                string
+	id                 *int
+	created_at         *time.Time
+	updated_at         *time.Time
+	name               *string
+	age                *uint
+	addage             *uint
+	sex                *bool
+	clearedFields      map[string]struct{}
+	weapon             *int
+	clearedweapon      bool
+	menpai             *int
+	clearedmenpai      bool
+	spouse             *int
+	clearedspouse      bool
+	master             *int
+	clearedmaster      bool
+	apprentices        map[int]struct{}
+	removedapprentices map[int]struct{}
+	followers          map[int]struct{}
+	removedfollowers   map[int]struct{}
+	following          map[int]struct{}
+	removedfollowing   map[int]struct{}
+	friends            map[int]struct{}
+	removedfriends     map[int]struct{}
 }
 
 var _ ent.Mutation = (*JiangHuRenMutation)(nil)
@@ -178,6 +197,349 @@ func (m *JiangHuRenMutation) ResetAge() {
 	m.addage = nil
 }
 
+// SetSex sets the sex field.
+func (m *JiangHuRenMutation) SetSex(b bool) {
+	m.sex = &b
+}
+
+// Sex returns the sex value in the mutation.
+func (m *JiangHuRenMutation) Sex() (r bool, exists bool) {
+	v := m.sex
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetSex reset all changes of the sex field.
+func (m *JiangHuRenMutation) ResetSex() {
+	m.sex = nil
+}
+
+// SetWeaponID sets the weapon edge to Weapon by id.
+func (m *JiangHuRenMutation) SetWeaponID(id int) {
+	m.weapon = &id
+}
+
+// ClearWeapon clears the weapon edge to Weapon.
+func (m *JiangHuRenMutation) ClearWeapon() {
+	m.clearedweapon = true
+}
+
+// WeaponCleared returns if the edge weapon was cleared.
+func (m *JiangHuRenMutation) WeaponCleared() bool {
+	return m.clearedweapon
+}
+
+// WeaponID returns the weapon id in the mutation.
+func (m *JiangHuRenMutation) WeaponID() (id int, exists bool) {
+	if m.weapon != nil {
+		return *m.weapon, true
+	}
+	return
+}
+
+// WeaponIDs returns the weapon ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// WeaponID instead. It exists only for internal usage by the builders.
+func (m *JiangHuRenMutation) WeaponIDs() (ids []int) {
+	if id := m.weapon; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetWeapon reset all changes of the weapon edge.
+func (m *JiangHuRenMutation) ResetWeapon() {
+	m.weapon = nil
+	m.clearedweapon = false
+}
+
+// SetMenpaiID sets the menpai edge to MenPai by id.
+func (m *JiangHuRenMutation) SetMenpaiID(id int) {
+	m.menpai = &id
+}
+
+// ClearMenpai clears the menpai edge to MenPai.
+func (m *JiangHuRenMutation) ClearMenpai() {
+	m.clearedmenpai = true
+}
+
+// MenpaiCleared returns if the edge menpai was cleared.
+func (m *JiangHuRenMutation) MenpaiCleared() bool {
+	return m.clearedmenpai
+}
+
+// MenpaiID returns the menpai id in the mutation.
+func (m *JiangHuRenMutation) MenpaiID() (id int, exists bool) {
+	if m.menpai != nil {
+		return *m.menpai, true
+	}
+	return
+}
+
+// MenpaiIDs returns the menpai ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// MenpaiID instead. It exists only for internal usage by the builders.
+func (m *JiangHuRenMutation) MenpaiIDs() (ids []int) {
+	if id := m.menpai; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetMenpai reset all changes of the menpai edge.
+func (m *JiangHuRenMutation) ResetMenpai() {
+	m.menpai = nil
+	m.clearedmenpai = false
+}
+
+// SetSpouseID sets the spouse edge to JiangHuRen by id.
+func (m *JiangHuRenMutation) SetSpouseID(id int) {
+	m.spouse = &id
+}
+
+// ClearSpouse clears the spouse edge to JiangHuRen.
+func (m *JiangHuRenMutation) ClearSpouse() {
+	m.clearedspouse = true
+}
+
+// SpouseCleared returns if the edge spouse was cleared.
+func (m *JiangHuRenMutation) SpouseCleared() bool {
+	return m.clearedspouse
+}
+
+// SpouseID returns the spouse id in the mutation.
+func (m *JiangHuRenMutation) SpouseID() (id int, exists bool) {
+	if m.spouse != nil {
+		return *m.spouse, true
+	}
+	return
+}
+
+// SpouseIDs returns the spouse ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// SpouseID instead. It exists only for internal usage by the builders.
+func (m *JiangHuRenMutation) SpouseIDs() (ids []int) {
+	if id := m.spouse; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetSpouse reset all changes of the spouse edge.
+func (m *JiangHuRenMutation) ResetSpouse() {
+	m.spouse = nil
+	m.clearedspouse = false
+}
+
+// SetMasterID sets the master edge to JiangHuRen by id.
+func (m *JiangHuRenMutation) SetMasterID(id int) {
+	m.master = &id
+}
+
+// ClearMaster clears the master edge to JiangHuRen.
+func (m *JiangHuRenMutation) ClearMaster() {
+	m.clearedmaster = true
+}
+
+// MasterCleared returns if the edge master was cleared.
+func (m *JiangHuRenMutation) MasterCleared() bool {
+	return m.clearedmaster
+}
+
+// MasterID returns the master id in the mutation.
+func (m *JiangHuRenMutation) MasterID() (id int, exists bool) {
+	if m.master != nil {
+		return *m.master, true
+	}
+	return
+}
+
+// MasterIDs returns the master ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// MasterID instead. It exists only for internal usage by the builders.
+func (m *JiangHuRenMutation) MasterIDs() (ids []int) {
+	if id := m.master; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetMaster reset all changes of the master edge.
+func (m *JiangHuRenMutation) ResetMaster() {
+	m.master = nil
+	m.clearedmaster = false
+}
+
+// AddApprenticeIDs adds the apprentices edge to JiangHuRen by ids.
+func (m *JiangHuRenMutation) AddApprenticeIDs(ids ...int) {
+	if m.apprentices == nil {
+		m.apprentices = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.apprentices[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveApprenticeIDs removes the apprentices edge to JiangHuRen by ids.
+func (m *JiangHuRenMutation) RemoveApprenticeIDs(ids ...int) {
+	if m.removedapprentices == nil {
+		m.removedapprentices = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedapprentices[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedApprentices returns the removed ids of apprentices.
+func (m *JiangHuRenMutation) RemovedApprenticesIDs() (ids []int) {
+	for id := range m.removedapprentices {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ApprenticesIDs returns the apprentices ids in the mutation.
+func (m *JiangHuRenMutation) ApprenticesIDs() (ids []int) {
+	for id := range m.apprentices {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetApprentices reset all changes of the apprentices edge.
+func (m *JiangHuRenMutation) ResetApprentices() {
+	m.apprentices = nil
+	m.removedapprentices = nil
+}
+
+// AddFollowerIDs adds the followers edge to JiangHuRen by ids.
+func (m *JiangHuRenMutation) AddFollowerIDs(ids ...int) {
+	if m.followers == nil {
+		m.followers = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.followers[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveFollowerIDs removes the followers edge to JiangHuRen by ids.
+func (m *JiangHuRenMutation) RemoveFollowerIDs(ids ...int) {
+	if m.removedfollowers == nil {
+		m.removedfollowers = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedfollowers[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedFollowers returns the removed ids of followers.
+func (m *JiangHuRenMutation) RemovedFollowersIDs() (ids []int) {
+	for id := range m.removedfollowers {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// FollowersIDs returns the followers ids in the mutation.
+func (m *JiangHuRenMutation) FollowersIDs() (ids []int) {
+	for id := range m.followers {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetFollowers reset all changes of the followers edge.
+func (m *JiangHuRenMutation) ResetFollowers() {
+	m.followers = nil
+	m.removedfollowers = nil
+}
+
+// AddFollowingIDs adds the following edge to JiangHuRen by ids.
+func (m *JiangHuRenMutation) AddFollowingIDs(ids ...int) {
+	if m.following == nil {
+		m.following = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.following[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveFollowingIDs removes the following edge to JiangHuRen by ids.
+func (m *JiangHuRenMutation) RemoveFollowingIDs(ids ...int) {
+	if m.removedfollowing == nil {
+		m.removedfollowing = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedfollowing[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedFollowing returns the removed ids of following.
+func (m *JiangHuRenMutation) RemovedFollowingIDs() (ids []int) {
+	for id := range m.removedfollowing {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// FollowingIDs returns the following ids in the mutation.
+func (m *JiangHuRenMutation) FollowingIDs() (ids []int) {
+	for id := range m.following {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetFollowing reset all changes of the following edge.
+func (m *JiangHuRenMutation) ResetFollowing() {
+	m.following = nil
+	m.removedfollowing = nil
+}
+
+// AddFriendIDs adds the friends edge to JiangHuRen by ids.
+func (m *JiangHuRenMutation) AddFriendIDs(ids ...int) {
+	if m.friends == nil {
+		m.friends = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.friends[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveFriendIDs removes the friends edge to JiangHuRen by ids.
+func (m *JiangHuRenMutation) RemoveFriendIDs(ids ...int) {
+	if m.removedfriends == nil {
+		m.removedfriends = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedfriends[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedFriends returns the removed ids of friends.
+func (m *JiangHuRenMutation) RemovedFriendsIDs() (ids []int) {
+	for id := range m.removedfriends {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// FriendsIDs returns the friends ids in the mutation.
+func (m *JiangHuRenMutation) FriendsIDs() (ids []int) {
+	for id := range m.friends {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetFriends reset all changes of the friends edge.
+func (m *JiangHuRenMutation) ResetFriends() {
+	m.friends = nil
+	m.removedfriends = nil
+}
+
 // Op returns the operation name.
 func (m *JiangHuRenMutation) Op() Op {
 	return m.op
@@ -192,7 +554,7 @@ func (m *JiangHuRenMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *JiangHuRenMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.created_at != nil {
 		fields = append(fields, jianghuren.FieldCreatedAt)
 	}
@@ -204,6 +566,9 @@ func (m *JiangHuRenMutation) Fields() []string {
 	}
 	if m.age != nil {
 		fields = append(fields, jianghuren.FieldAge)
+	}
+	if m.sex != nil {
+		fields = append(fields, jianghuren.FieldSex)
 	}
 	return fields
 }
@@ -221,6 +586,8 @@ func (m *JiangHuRenMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case jianghuren.FieldAge:
 		return m.Age()
+	case jianghuren.FieldSex:
+		return m.Sex()
 	}
 	return nil, false
 }
@@ -257,6 +624,13 @@ func (m *JiangHuRenMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAge(v)
+		return nil
+	case jianghuren.FieldSex:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSex(v)
 		return nil
 	}
 	return fmt.Errorf("unknown JiangHuRen field %s", name)
@@ -335,6 +709,9 @@ func (m *JiangHuRenMutation) ResetField(name string) error {
 	case jianghuren.FieldAge:
 		m.ResetAge()
 		return nil
+	case jianghuren.FieldSex:
+		m.ResetSex()
+		return nil
 	}
 	return fmt.Errorf("unknown JiangHuRen field %s", name)
 }
@@ -342,7 +719,31 @@ func (m *JiangHuRenMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *JiangHuRenMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 8)
+	if m.weapon != nil {
+		edges = append(edges, jianghuren.EdgeWeapon)
+	}
+	if m.menpai != nil {
+		edges = append(edges, jianghuren.EdgeMenpai)
+	}
+	if m.spouse != nil {
+		edges = append(edges, jianghuren.EdgeSpouse)
+	}
+	if m.master != nil {
+		edges = append(edges, jianghuren.EdgeMaster)
+	}
+	if m.apprentices != nil {
+		edges = append(edges, jianghuren.EdgeApprentices)
+	}
+	if m.followers != nil {
+		edges = append(edges, jianghuren.EdgeFollowers)
+	}
+	if m.following != nil {
+		edges = append(edges, jianghuren.EdgeFollowing)
+	}
+	if m.friends != nil {
+		edges = append(edges, jianghuren.EdgeFriends)
+	}
 	return edges
 }
 
@@ -350,6 +751,46 @@ func (m *JiangHuRenMutation) AddedEdges() []string {
 // the given edge name.
 func (m *JiangHuRenMutation) AddedIDs(name string) []ent.Value {
 	switch name {
+	case jianghuren.EdgeWeapon:
+		if id := m.weapon; id != nil {
+			return []ent.Value{*id}
+		}
+	case jianghuren.EdgeMenpai:
+		if id := m.menpai; id != nil {
+			return []ent.Value{*id}
+		}
+	case jianghuren.EdgeSpouse:
+		if id := m.spouse; id != nil {
+			return []ent.Value{*id}
+		}
+	case jianghuren.EdgeMaster:
+		if id := m.master; id != nil {
+			return []ent.Value{*id}
+		}
+	case jianghuren.EdgeApprentices:
+		ids := make([]ent.Value, 0, len(m.apprentices))
+		for id := range m.apprentices {
+			ids = append(ids, id)
+		}
+		return ids
+	case jianghuren.EdgeFollowers:
+		ids := make([]ent.Value, 0, len(m.followers))
+		for id := range m.followers {
+			ids = append(ids, id)
+		}
+		return ids
+	case jianghuren.EdgeFollowing:
+		ids := make([]ent.Value, 0, len(m.following))
+		for id := range m.following {
+			ids = append(ids, id)
+		}
+		return ids
+	case jianghuren.EdgeFriends:
+		ids := make([]ent.Value, 0, len(m.friends))
+		for id := range m.friends {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -357,7 +798,19 @@ func (m *JiangHuRenMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *JiangHuRenMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 8)
+	if m.removedapprentices != nil {
+		edges = append(edges, jianghuren.EdgeApprentices)
+	}
+	if m.removedfollowers != nil {
+		edges = append(edges, jianghuren.EdgeFollowers)
+	}
+	if m.removedfollowing != nil {
+		edges = append(edges, jianghuren.EdgeFollowing)
+	}
+	if m.removedfriends != nil {
+		edges = append(edges, jianghuren.EdgeFriends)
+	}
 	return edges
 }
 
@@ -365,6 +818,30 @@ func (m *JiangHuRenMutation) RemovedEdges() []string {
 // the given edge name.
 func (m *JiangHuRenMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
+	case jianghuren.EdgeApprentices:
+		ids := make([]ent.Value, 0, len(m.removedapprentices))
+		for id := range m.removedapprentices {
+			ids = append(ids, id)
+		}
+		return ids
+	case jianghuren.EdgeFollowers:
+		ids := make([]ent.Value, 0, len(m.removedfollowers))
+		for id := range m.removedfollowers {
+			ids = append(ids, id)
+		}
+		return ids
+	case jianghuren.EdgeFollowing:
+		ids := make([]ent.Value, 0, len(m.removedfollowing))
+		for id := range m.removedfollowing {
+			ids = append(ids, id)
+		}
+		return ids
+	case jianghuren.EdgeFriends:
+		ids := make([]ent.Value, 0, len(m.removedfriends))
+		for id := range m.removedfriends {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -372,7 +849,19 @@ func (m *JiangHuRenMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *JiangHuRenMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 8)
+	if m.clearedweapon {
+		edges = append(edges, jianghuren.EdgeWeapon)
+	}
+	if m.clearedmenpai {
+		edges = append(edges, jianghuren.EdgeMenpai)
+	}
+	if m.clearedspouse {
+		edges = append(edges, jianghuren.EdgeSpouse)
+	}
+	if m.clearedmaster {
+		edges = append(edges, jianghuren.EdgeMaster)
+	}
 	return edges
 }
 
@@ -380,6 +869,14 @@ func (m *JiangHuRenMutation) ClearedEdges() []string {
 // cleared in this mutation.
 func (m *JiangHuRenMutation) EdgeCleared(name string) bool {
 	switch name {
+	case jianghuren.EdgeWeapon:
+		return m.clearedweapon
+	case jianghuren.EdgeMenpai:
+		return m.clearedmenpai
+	case jianghuren.EdgeSpouse:
+		return m.clearedspouse
+	case jianghuren.EdgeMaster:
+		return m.clearedmaster
 	}
 	return false
 }
@@ -387,6 +884,20 @@ func (m *JiangHuRenMutation) EdgeCleared(name string) bool {
 // ClearEdge clears the value for the given name. It returns an
 // error if the edge name is not defined in the schema.
 func (m *JiangHuRenMutation) ClearEdge(name string) error {
+	switch name {
+	case jianghuren.EdgeWeapon:
+		m.ClearWeapon()
+		return nil
+	case jianghuren.EdgeMenpai:
+		m.ClearMenpai()
+		return nil
+	case jianghuren.EdgeSpouse:
+		m.ClearSpouse()
+		return nil
+	case jianghuren.EdgeMaster:
+		m.ClearMaster()
+		return nil
+	}
 	return fmt.Errorf("unknown JiangHuRen unique edge %s", name)
 }
 
@@ -395,6 +906,30 @@ func (m *JiangHuRenMutation) ClearEdge(name string) error {
 // defined in the schema.
 func (m *JiangHuRenMutation) ResetEdge(name string) error {
 	switch name {
+	case jianghuren.EdgeWeapon:
+		m.ResetWeapon()
+		return nil
+	case jianghuren.EdgeMenpai:
+		m.ResetMenpai()
+		return nil
+	case jianghuren.EdgeSpouse:
+		m.ResetSpouse()
+		return nil
+	case jianghuren.EdgeMaster:
+		m.ResetMaster()
+		return nil
+	case jianghuren.EdgeApprentices:
+		m.ResetApprentices()
+		return nil
+	case jianghuren.EdgeFollowers:
+		m.ResetFollowers()
+		return nil
+	case jianghuren.EdgeFollowing:
+		m.ResetFollowing()
+		return nil
+	case jianghuren.EdgeFriends:
+		m.ResetFriends()
+		return nil
 	}
 	return fmt.Errorf("unknown JiangHuRen edge %s", name)
 }
@@ -403,14 +938,16 @@ func (m *JiangHuRenMutation) ResetEdge(name string) error {
 // nodes in the graph.
 type MenPaiMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	created_at    *time.Time
-	updated_at    *time.Time
-	name          *string
-	address       *string
-	clearedFields map[string]struct{}
+	op               Op
+	typ              string
+	id               *int
+	created_at       *time.Time
+	updated_at       *time.Time
+	name             *string
+	address          *string
+	clearedFields    map[string]struct{}
+	disciples        map[int]struct{}
+	removeddisciples map[int]struct{}
 }
 
 var _ ent.Mutation = (*MenPaiMutation)(nil)
@@ -527,6 +1064,48 @@ func (m *MenPaiMutation) Address() (r string, exists bool) {
 // ResetAddress reset all changes of the address field.
 func (m *MenPaiMutation) ResetAddress() {
 	m.address = nil
+}
+
+// AddDiscipleIDs adds the disciples edge to JiangHuRen by ids.
+func (m *MenPaiMutation) AddDiscipleIDs(ids ...int) {
+	if m.disciples == nil {
+		m.disciples = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.disciples[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveDiscipleIDs removes the disciples edge to JiangHuRen by ids.
+func (m *MenPaiMutation) RemoveDiscipleIDs(ids ...int) {
+	if m.removeddisciples == nil {
+		m.removeddisciples = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removeddisciples[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedDisciples returns the removed ids of disciples.
+func (m *MenPaiMutation) RemovedDisciplesIDs() (ids []int) {
+	for id := range m.removeddisciples {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// DisciplesIDs returns the disciples ids in the mutation.
+func (m *MenPaiMutation) DisciplesIDs() (ids []int) {
+	for id := range m.disciples {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetDisciples reset all changes of the disciples edge.
+func (m *MenPaiMutation) ResetDisciples() {
+	m.disciples = nil
+	m.removeddisciples = nil
 }
 
 // Op returns the operation name.
@@ -678,7 +1257,10 @@ func (m *MenPaiMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *MenPaiMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.disciples != nil {
+		edges = append(edges, menpai.EdgeDisciples)
+	}
 	return edges
 }
 
@@ -686,6 +1268,12 @@ func (m *MenPaiMutation) AddedEdges() []string {
 // the given edge name.
 func (m *MenPaiMutation) AddedIDs(name string) []ent.Value {
 	switch name {
+	case menpai.EdgeDisciples:
+		ids := make([]ent.Value, 0, len(m.disciples))
+		for id := range m.disciples {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -693,7 +1281,10 @@ func (m *MenPaiMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *MenPaiMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.removeddisciples != nil {
+		edges = append(edges, menpai.EdgeDisciples)
+	}
 	return edges
 }
 
@@ -701,6 +1292,12 @@ func (m *MenPaiMutation) RemovedEdges() []string {
 // the given edge name.
 func (m *MenPaiMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
+	case menpai.EdgeDisciples:
+		ids := make([]ent.Value, 0, len(m.removeddisciples))
+		for id := range m.removeddisciples {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -708,7 +1305,7 @@ func (m *MenPaiMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *MenPaiMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
 	return edges
 }
 
@@ -723,6 +1320,8 @@ func (m *MenPaiMutation) EdgeCleared(name string) bool {
 // ClearEdge clears the value for the given name. It returns an
 // error if the edge name is not defined in the schema.
 func (m *MenPaiMutation) ClearEdge(name string) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown MenPai unique edge %s", name)
 }
 
@@ -731,8 +1330,512 @@ func (m *MenPaiMutation) ClearEdge(name string) error {
 // defined in the schema.
 func (m *MenPaiMutation) ResetEdge(name string) error {
 	switch name {
+	case menpai.EdgeDisciples:
+		m.ResetDisciples()
+		return nil
 	}
 	return fmt.Errorf("unknown MenPai edge %s", name)
+}
+
+// WeaponMutation represents an operation that mutate the Weapons
+// nodes in the graph.
+type WeaponMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	created_at    *time.Time
+	updated_at    *time.Time
+	name          *string
+	level         *int
+	addlevel      *int
+	category      *int
+	addcategory   *int
+	clearedFields map[string]struct{}
+	owner         *int
+	clearedowner  bool
+}
+
+var _ ent.Mutation = (*WeaponMutation)(nil)
+
+// newWeaponMutation creates new mutation for $n.Name.
+func newWeaponMutation(c config, op Op) *WeaponMutation {
+	return &WeaponMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeWeapon,
+		clearedFields: make(map[string]struct{}),
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m WeaponMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m WeaponMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *WeaponMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetCreatedAt sets the created_at field.
+func (m *WeaponMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the created_at value in the mutation.
+func (m *WeaponMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt reset all changes of the created_at field.
+func (m *WeaponMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the updated_at field.
+func (m *WeaponMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the updated_at value in the mutation.
+func (m *WeaponMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt reset all changes of the updated_at field.
+func (m *WeaponMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// SetName sets the name field.
+func (m *WeaponMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the name value in the mutation.
+func (m *WeaponMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetName reset all changes of the name field.
+func (m *WeaponMutation) ResetName() {
+	m.name = nil
+}
+
+// SetLevel sets the level field.
+func (m *WeaponMutation) SetLevel(i int) {
+	m.level = &i
+	m.addlevel = nil
+}
+
+// Level returns the level value in the mutation.
+func (m *WeaponMutation) Level() (r int, exists bool) {
+	v := m.level
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// AddLevel adds i to level.
+func (m *WeaponMutation) AddLevel(i int) {
+	if m.addlevel != nil {
+		*m.addlevel += i
+	} else {
+		m.addlevel = &i
+	}
+}
+
+// AddedLevel returns the value that was added to the level field in this mutation.
+func (m *WeaponMutation) AddedLevel() (r int, exists bool) {
+	v := m.addlevel
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetLevel reset all changes of the level field.
+func (m *WeaponMutation) ResetLevel() {
+	m.level = nil
+	m.addlevel = nil
+}
+
+// SetCategory sets the category field.
+func (m *WeaponMutation) SetCategory(i int) {
+	m.category = &i
+	m.addcategory = nil
+}
+
+// Category returns the category value in the mutation.
+func (m *WeaponMutation) Category() (r int, exists bool) {
+	v := m.category
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// AddCategory adds i to category.
+func (m *WeaponMutation) AddCategory(i int) {
+	if m.addcategory != nil {
+		*m.addcategory += i
+	} else {
+		m.addcategory = &i
+	}
+}
+
+// AddedCategory returns the value that was added to the category field in this mutation.
+func (m *WeaponMutation) AddedCategory() (r int, exists bool) {
+	v := m.addcategory
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCategory reset all changes of the category field.
+func (m *WeaponMutation) ResetCategory() {
+	m.category = nil
+	m.addcategory = nil
+}
+
+// SetOwnerID sets the owner edge to JiangHuRen by id.
+func (m *WeaponMutation) SetOwnerID(id int) {
+	m.owner = &id
+}
+
+// ClearOwner clears the owner edge to JiangHuRen.
+func (m *WeaponMutation) ClearOwner() {
+	m.clearedowner = true
+}
+
+// OwnerCleared returns if the edge owner was cleared.
+func (m *WeaponMutation) OwnerCleared() bool {
+	return m.clearedowner
+}
+
+// OwnerID returns the owner id in the mutation.
+func (m *WeaponMutation) OwnerID() (id int, exists bool) {
+	if m.owner != nil {
+		return *m.owner, true
+	}
+	return
+}
+
+// OwnerIDs returns the owner ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// OwnerID instead. It exists only for internal usage by the builders.
+func (m *WeaponMutation) OwnerIDs() (ids []int) {
+	if id := m.owner; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetOwner reset all changes of the owner edge.
+func (m *WeaponMutation) ResetOwner() {
+	m.owner = nil
+	m.clearedowner = false
+}
+
+// Op returns the operation name.
+func (m *WeaponMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Weapon).
+func (m *WeaponMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *WeaponMutation) Fields() []string {
+	fields := make([]string, 0, 5)
+	if m.created_at != nil {
+		fields = append(fields, weapon.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, weapon.FieldUpdatedAt)
+	}
+	if m.name != nil {
+		fields = append(fields, weapon.FieldName)
+	}
+	if m.level != nil {
+		fields = append(fields, weapon.FieldLevel)
+	}
+	if m.category != nil {
+		fields = append(fields, weapon.FieldCategory)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *WeaponMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case weapon.FieldCreatedAt:
+		return m.CreatedAt()
+	case weapon.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case weapon.FieldName:
+		return m.Name()
+	case weapon.FieldLevel:
+		return m.Level()
+	case weapon.FieldCategory:
+		return m.Category()
+	}
+	return nil, false
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *WeaponMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case weapon.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case weapon.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case weapon.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case weapon.FieldLevel:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLevel(v)
+		return nil
+	case weapon.FieldCategory:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCategory(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Weapon field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *WeaponMutation) AddedFields() []string {
+	var fields []string
+	if m.addlevel != nil {
+		fields = append(fields, weapon.FieldLevel)
+	}
+	if m.addcategory != nil {
+		fields = append(fields, weapon.FieldCategory)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *WeaponMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case weapon.FieldLevel:
+		return m.AddedLevel()
+	case weapon.FieldCategory:
+		return m.AddedCategory()
+	}
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *WeaponMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case weapon.FieldLevel:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddLevel(v)
+		return nil
+	case weapon.FieldCategory:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCategory(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Weapon numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *WeaponMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *WeaponMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *WeaponMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Weapon nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *WeaponMutation) ResetField(name string) error {
+	switch name {
+	case weapon.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case weapon.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case weapon.FieldName:
+		m.ResetName()
+		return nil
+	case weapon.FieldLevel:
+		m.ResetLevel()
+		return nil
+	case weapon.FieldCategory:
+		m.ResetCategory()
+		return nil
+	}
+	return fmt.Errorf("unknown Weapon field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *WeaponMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.owner != nil {
+		edges = append(edges, weapon.EdgeOwner)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *WeaponMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case weapon.EdgeOwner:
+		if id := m.owner; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *WeaponMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *WeaponMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *WeaponMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedowner {
+		edges = append(edges, weapon.EdgeOwner)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *WeaponMutation) EdgeCleared(name string) bool {
+	switch name {
+	case weapon.EdgeOwner:
+		return m.clearedowner
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *WeaponMutation) ClearEdge(name string) error {
+	switch name {
+	case weapon.EdgeOwner:
+		m.ClearOwner()
+		return nil
+	}
+	return fmt.Errorf("unknown Weapon unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *WeaponMutation) ResetEdge(name string) error {
+	switch name {
+	case weapon.EdgeOwner:
+		m.ResetOwner()
+		return nil
+	}
+	return fmt.Errorf("unknown Weapon edge %s", name)
 }
 
 // WuGongMutation represents an operation that mutate the WuGongs

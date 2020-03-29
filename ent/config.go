@@ -26,6 +26,7 @@ type config struct {
 type hooks struct {
 	JiangHuRen []ent.Hook
 	MenPai     []ent.Hook
+	Weapon     []ent.Hook
 	WuGong     []ent.Hook
 }
 

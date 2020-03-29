@@ -24,6 +24,27 @@ type MenPai struct {
 	Name string `json:"name,omitempty"`
 	// Address holds the value of the "address" field.
 	Address string `json:"address,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the MenPaiQuery when eager-loading is set.
+	Edges MenPaiEdges `json:"edges"`
+}
+
+// MenPaiEdges holds the relations/edges for other nodes in the graph.
+type MenPaiEdges struct {
+	// Disciples holds the value of the disciples edge.
+	Disciples []*JiangHuRen
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// DisciplesOrErr returns the Disciples value or an error if the edge
+// was not loaded in eager-loading.
+func (e MenPaiEdges) DisciplesOrErr() ([]*JiangHuRen, error) {
+	if e.loadedTypes[0] {
+		return e.Disciples, nil
+	}
+	return nil, &NotLoadedError{edge: "disciples"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -70,6 +91,11 @@ func (mp *MenPai) assignValues(values ...interface{}) error {
 		mp.Address = value.String
 	}
 	return nil
+}
+
+// QueryDisciples queries the disciples edge of the MenPai.
+func (mp *MenPai) QueryDisciples() *JiangHuRenQuery {
+	return (&MenPaiClient{config: mp.config}).QueryDisciples(mp)
 }
 
 // Update returns a builder for updating this MenPai.

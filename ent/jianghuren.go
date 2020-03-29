@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/BiLuoHui/ganshijiumei/ent/jianghuren"
+	"github.com/BiLuoHui/ganshijiumei/ent/menpai"
+	"github.com/BiLuoHui/ganshijiumei/ent/weapon"
 	"github.com/facebookincubator/ent/dialect/sql"
 )
 
@@ -24,6 +26,129 @@ type JiangHuRen struct {
 	Name string `json:"name,omitempty"`
 	// Age holds the value of the "age" field.
 	Age uint `json:"age,omitempty"`
+	// Sex holds the value of the "sex" field.
+	Sex bool `json:"sex,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the JiangHuRenQuery when eager-loading is set.
+	Edges                    JiangHuRenEdges `json:"edges"`
+	jiang_hu_ren_spouse      *int
+	jiang_hu_ren_apprentices *int
+	men_pai_disciples        *int
+}
+
+// JiangHuRenEdges holds the relations/edges for other nodes in the graph.
+type JiangHuRenEdges struct {
+	// Weapon holds the value of the weapon edge.
+	Weapon *Weapon
+	// Menpai holds the value of the menpai edge.
+	Menpai *MenPai
+	// Spouse holds the value of the spouse edge.
+	Spouse *JiangHuRen
+	// Master holds the value of the master edge.
+	Master *JiangHuRen
+	// Apprentices holds the value of the apprentices edge.
+	Apprentices []*JiangHuRen
+	// Followers holds the value of the followers edge.
+	Followers []*JiangHuRen
+	// Following holds the value of the following edge.
+	Following []*JiangHuRen
+	// Friends holds the value of the friends edge.
+	Friends []*JiangHuRen
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [8]bool
+}
+
+// WeaponOrErr returns the Weapon value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e JiangHuRenEdges) WeaponOrErr() (*Weapon, error) {
+	if e.loadedTypes[0] {
+		if e.Weapon == nil {
+			// The edge weapon was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: weapon.Label}
+		}
+		return e.Weapon, nil
+	}
+	return nil, &NotLoadedError{edge: "weapon"}
+}
+
+// MenpaiOrErr returns the Menpai value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e JiangHuRenEdges) MenpaiOrErr() (*MenPai, error) {
+	if e.loadedTypes[1] {
+		if e.Menpai == nil {
+			// The edge menpai was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: menpai.Label}
+		}
+		return e.Menpai, nil
+	}
+	return nil, &NotLoadedError{edge: "menpai"}
+}
+
+// SpouseOrErr returns the Spouse value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e JiangHuRenEdges) SpouseOrErr() (*JiangHuRen, error) {
+	if e.loadedTypes[2] {
+		if e.Spouse == nil {
+			// The edge spouse was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: jianghuren.Label}
+		}
+		return e.Spouse, nil
+	}
+	return nil, &NotLoadedError{edge: "spouse"}
+}
+
+// MasterOrErr returns the Master value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e JiangHuRenEdges) MasterOrErr() (*JiangHuRen, error) {
+	if e.loadedTypes[3] {
+		if e.Master == nil {
+			// The edge master was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: jianghuren.Label}
+		}
+		return e.Master, nil
+	}
+	return nil, &NotLoadedError{edge: "master"}
+}
+
+// ApprenticesOrErr returns the Apprentices value or an error if the edge
+// was not loaded in eager-loading.
+func (e JiangHuRenEdges) ApprenticesOrErr() ([]*JiangHuRen, error) {
+	if e.loadedTypes[4] {
+		return e.Apprentices, nil
+	}
+	return nil, &NotLoadedError{edge: "apprentices"}
+}
+
+// FollowersOrErr returns the Followers value or an error if the edge
+// was not loaded in eager-loading.
+func (e JiangHuRenEdges) FollowersOrErr() ([]*JiangHuRen, error) {
+	if e.loadedTypes[5] {
+		return e.Followers, nil
+	}
+	return nil, &NotLoadedError{edge: "followers"}
+}
+
+// FollowingOrErr returns the Following value or an error if the edge
+// was not loaded in eager-loading.
+func (e JiangHuRenEdges) FollowingOrErr() ([]*JiangHuRen, error) {
+	if e.loadedTypes[6] {
+		return e.Following, nil
+	}
+	return nil, &NotLoadedError{edge: "following"}
+}
+
+// FriendsOrErr returns the Friends value or an error if the edge
+// was not loaded in eager-loading.
+func (e JiangHuRenEdges) FriendsOrErr() ([]*JiangHuRen, error) {
+	if e.loadedTypes[7] {
+		return e.Friends, nil
+	}
+	return nil, &NotLoadedError{edge: "friends"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -34,6 +159,16 @@ func (*JiangHuRen) scanValues() []interface{} {
 		&sql.NullTime{},   // updated_at
 		&sql.NullString{}, // name
 		&sql.NullInt64{},  // age
+		&sql.NullBool{},   // sex
+	}
+}
+
+// fkValues returns the types for scanning foreign-keys values from sql.Rows.
+func (*JiangHuRen) fkValues() []interface{} {
+	return []interface{}{
+		&sql.NullInt64{}, // jiang_hu_ren_spouse
+		&sql.NullInt64{}, // jiang_hu_ren_apprentices
+		&sql.NullInt64{}, // men_pai_disciples
 	}
 }
 
@@ -69,7 +204,73 @@ func (jhr *JiangHuRen) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		jhr.Age = uint(value.Int64)
 	}
+	if value, ok := values[4].(*sql.NullBool); !ok {
+		return fmt.Errorf("unexpected type %T for field sex", values[4])
+	} else if value.Valid {
+		jhr.Sex = value.Bool
+	}
+	values = values[5:]
+	if len(values) == len(jianghuren.ForeignKeys) {
+		if value, ok := values[0].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field jiang_hu_ren_spouse", value)
+		} else if value.Valid {
+			jhr.jiang_hu_ren_spouse = new(int)
+			*jhr.jiang_hu_ren_spouse = int(value.Int64)
+		}
+		if value, ok := values[1].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field jiang_hu_ren_apprentices", value)
+		} else if value.Valid {
+			jhr.jiang_hu_ren_apprentices = new(int)
+			*jhr.jiang_hu_ren_apprentices = int(value.Int64)
+		}
+		if value, ok := values[2].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field men_pai_disciples", value)
+		} else if value.Valid {
+			jhr.men_pai_disciples = new(int)
+			*jhr.men_pai_disciples = int(value.Int64)
+		}
+	}
 	return nil
+}
+
+// QueryWeapon queries the weapon edge of the JiangHuRen.
+func (jhr *JiangHuRen) QueryWeapon() *WeaponQuery {
+	return (&JiangHuRenClient{config: jhr.config}).QueryWeapon(jhr)
+}
+
+// QueryMenpai queries the menpai edge of the JiangHuRen.
+func (jhr *JiangHuRen) QueryMenpai() *MenPaiQuery {
+	return (&JiangHuRenClient{config: jhr.config}).QueryMenpai(jhr)
+}
+
+// QuerySpouse queries the spouse edge of the JiangHuRen.
+func (jhr *JiangHuRen) QuerySpouse() *JiangHuRenQuery {
+	return (&JiangHuRenClient{config: jhr.config}).QuerySpouse(jhr)
+}
+
+// QueryMaster queries the master edge of the JiangHuRen.
+func (jhr *JiangHuRen) QueryMaster() *JiangHuRenQuery {
+	return (&JiangHuRenClient{config: jhr.config}).QueryMaster(jhr)
+}
+
+// QueryApprentices queries the apprentices edge of the JiangHuRen.
+func (jhr *JiangHuRen) QueryApprentices() *JiangHuRenQuery {
+	return (&JiangHuRenClient{config: jhr.config}).QueryApprentices(jhr)
+}
+
+// QueryFollowers queries the followers edge of the JiangHuRen.
+func (jhr *JiangHuRen) QueryFollowers() *JiangHuRenQuery {
+	return (&JiangHuRenClient{config: jhr.config}).QueryFollowers(jhr)
+}
+
+// QueryFollowing queries the following edge of the JiangHuRen.
+func (jhr *JiangHuRen) QueryFollowing() *JiangHuRenQuery {
+	return (&JiangHuRenClient{config: jhr.config}).QueryFollowing(jhr)
+}
+
+// QueryFriends queries the friends edge of the JiangHuRen.
+func (jhr *JiangHuRen) QueryFriends() *JiangHuRenQuery {
+	return (&JiangHuRenClient{config: jhr.config}).QueryFriends(jhr)
 }
 
 // Update returns a builder for updating this JiangHuRen.
@@ -103,6 +304,8 @@ func (jhr *JiangHuRen) String() string {
 	builder.WriteString(jhr.Name)
 	builder.WriteString(", age=")
 	builder.WriteString(fmt.Sprintf("%v", jhr.Age))
+	builder.WriteString(", sex=")
+	builder.WriteString(fmt.Sprintf("%v", jhr.Sex))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -14,10 +14,60 @@ const (
 	FieldCreatedAt = "created_at" // FieldUpdatedAt holds the string denoting the updated_at vertex property in the database.
 	FieldUpdatedAt = "updated_at" // FieldName holds the string denoting the name vertex property in the database.
 	FieldName      = "name"       // FieldAge holds the string denoting the age vertex property in the database.
-	FieldAge       = "age"
+	FieldAge       = "age"        // FieldSex holds the string denoting the sex vertex property in the database.
+	FieldSex       = "sex"
+
+	// EdgeWeapon holds the string denoting the weapon edge name in mutations.
+	EdgeWeapon = "weapon"
+	// EdgeMenpai holds the string denoting the menpai edge name in mutations.
+	EdgeMenpai = "menpai"
+	// EdgeSpouse holds the string denoting the spouse edge name in mutations.
+	EdgeSpouse = "spouse"
+	// EdgeMaster holds the string denoting the master edge name in mutations.
+	EdgeMaster = "master"
+	// EdgeApprentices holds the string denoting the apprentices edge name in mutations.
+	EdgeApprentices = "apprentices"
+	// EdgeFollowers holds the string denoting the followers edge name in mutations.
+	EdgeFollowers = "followers"
+	// EdgeFollowing holds the string denoting the following edge name in mutations.
+	EdgeFollowing = "following"
+	// EdgeFriends holds the string denoting the friends edge name in mutations.
+	EdgeFriends = "friends"
 
 	// Table holds the table name of the jianghuren in the database.
 	Table = "jiang_hu_rens"
+	// WeaponTable is the table the holds the weapon relation/edge.
+	WeaponTable = "weapons"
+	// WeaponInverseTable is the table name for the Weapon entity.
+	// It exists in this package in order to avoid circular dependency with the "weapon" package.
+	WeaponInverseTable = "weapons"
+	// WeaponColumn is the table column denoting the weapon relation/edge.
+	WeaponColumn = "jiang_hu_ren_weapon"
+	// MenpaiTable is the table the holds the menpai relation/edge.
+	MenpaiTable = "jiang_hu_rens"
+	// MenpaiInverseTable is the table name for the MenPai entity.
+	// It exists in this package in order to avoid circular dependency with the "menpai" package.
+	MenpaiInverseTable = "men_pais"
+	// MenpaiColumn is the table column denoting the menpai relation/edge.
+	MenpaiColumn = "men_pai_disciples"
+	// SpouseTable is the table the holds the spouse relation/edge.
+	SpouseTable = "jiang_hu_rens"
+	// SpouseColumn is the table column denoting the spouse relation/edge.
+	SpouseColumn = "jiang_hu_ren_spouse"
+	// MasterTable is the table the holds the master relation/edge.
+	MasterTable = "jiang_hu_rens"
+	// MasterColumn is the table column denoting the master relation/edge.
+	MasterColumn = "jiang_hu_ren_apprentices"
+	// ApprenticesTable is the table the holds the apprentices relation/edge.
+	ApprenticesTable = "jiang_hu_rens"
+	// ApprenticesColumn is the table column denoting the apprentices relation/edge.
+	ApprenticesColumn = "jiang_hu_ren_apprentices"
+	// FollowersTable is the table the holds the followers relation/edge. The primary key declared below.
+	FollowersTable = "jiang_hu_ren_following"
+	// FollowingTable is the table the holds the following relation/edge. The primary key declared below.
+	FollowingTable = "jiang_hu_ren_following"
+	// FriendsTable is the table the holds the friends relation/edge. The primary key declared below.
+	FriendsTable = "jiang_hu_ren_friends"
 )
 
 // Columns holds all SQL columns for jianghuren fields.
@@ -27,7 +77,27 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldName,
 	FieldAge,
+	FieldSex,
 }
+
+// ForeignKeys holds the SQL foreign-keys that are owned by the JiangHuRen type.
+var ForeignKeys = []string{
+	"jiang_hu_ren_spouse",
+	"jiang_hu_ren_apprentices",
+	"men_pai_disciples",
+}
+
+var (
+	// FollowersPrimaryKey and FollowersColumn2 are the table columns denoting the
+	// primary key for the followers relation (M2M).
+	FollowersPrimaryKey = []string{"jiang_hu_ren_id", "follower_id"}
+	// FollowingPrimaryKey and FollowingColumn2 are the table columns denoting the
+	// primary key for the following relation (M2M).
+	FollowingPrimaryKey = []string{"jiang_hu_ren_id", "follower_id"}
+	// FriendsPrimaryKey and FriendsColumn2 are the table columns denoting the
+	// primary key for the friends relation (M2M).
+	FriendsPrimaryKey = []string{"jiang_hu_ren_id", "friend_id"}
+)
 
 var (
 	// DefaultCreatedAt holds the default value on creation for the created_at field.

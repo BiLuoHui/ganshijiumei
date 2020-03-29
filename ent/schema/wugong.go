@@ -21,7 +21,9 @@ func (WuGong) Fields() []ent.Field {
 
 // Edges of the WuGong.
 func (WuGong) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		//
+	}
 }
 
 func (WuGong) Mixin() []ent.Mixin {

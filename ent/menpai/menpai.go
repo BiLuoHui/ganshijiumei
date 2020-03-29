@@ -16,8 +16,18 @@ const (
 	FieldName      = "name"       // FieldAddress holds the string denoting the address vertex property in the database.
 	FieldAddress   = "address"
 
+	// EdgeDisciples holds the string denoting the disciples edge name in mutations.
+	EdgeDisciples = "disciples"
+
 	// Table holds the table name of the menpai in the database.
 	Table = "men_pais"
+	// DisciplesTable is the table the holds the disciples relation/edge.
+	DisciplesTable = "jiang_hu_rens"
+	// DisciplesInverseTable is the table name for the JiangHuRen entity.
+	// It exists in this package in order to avoid circular dependency with the "jianghuren" package.
+	DisciplesInverseTable = "jiang_hu_rens"
+	// DisciplesColumn is the table column denoting the disciples relation/edge.
+	DisciplesColumn = "men_pai_disciples"
 )
 
 // Columns holds all SQL columns for menpai fields.

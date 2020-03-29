@@ -2,6 +2,7 @@ package schema
 
 import (
 	"github.com/facebookincubator/ent"
+	"github.com/facebookincubator/ent/schema/edge"
 	"github.com/facebookincubator/ent/schema/field"
 )
 
@@ -20,7 +21,10 @@ func (MenPai) Fields() []ent.Field {
 
 // Edges of the MenPai.
 func (MenPai) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.To("disciples", JiangHuRen.Type).
+			Comment("门人弟子"),
+	}
 }
 
 func (MenPai) Mixin() []ent.Mixin {

@@ -7,6 +7,7 @@ import (
 
 	"github.com/BiLuoHui/ganshijiumei/ent/predicate"
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their identifier.
@@ -117,6 +118,13 @@ func Name(v string) predicate.JiangHuRen {
 func Age(v uint) predicate.JiangHuRen {
 	return predicate.JiangHuRen(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldAge), v))
+	})
+}
+
+// Sex applies equality check predicate on the "sex" field. It's identical to SexEQ.
+func Sex(v bool) predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSex), v))
 	})
 }
 
@@ -456,6 +464,244 @@ func AgeLT(v uint) predicate.JiangHuRen {
 func AgeLTE(v uint) predicate.JiangHuRen {
 	return predicate.JiangHuRen(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldAge), v))
+	})
+}
+
+// SexEQ applies the EQ predicate on the "sex" field.
+func SexEQ(v bool) predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSex), v))
+	})
+}
+
+// SexNEQ applies the NEQ predicate on the "sex" field.
+func SexNEQ(v bool) predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldSex), v))
+	})
+}
+
+// HasWeapon applies the HasEdge predicate on the "weapon" edge.
+func HasWeapon() predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(WeaponTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, WeaponTable, WeaponColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasWeaponWith applies the HasEdge predicate on the "weapon" edge with a given conditions (other predicates).
+func HasWeaponWith(preds ...predicate.Weapon) predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(WeaponInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, WeaponTable, WeaponColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasMenpai applies the HasEdge predicate on the "menpai" edge.
+func HasMenpai() predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(MenpaiTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, MenpaiTable, MenpaiColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasMenpaiWith applies the HasEdge predicate on the "menpai" edge with a given conditions (other predicates).
+func HasMenpaiWith(preds ...predicate.MenPai) predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(MenpaiInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, MenpaiTable, MenpaiColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasSpouse applies the HasEdge predicate on the "spouse" edge.
+func HasSpouse() predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(SpouseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, SpouseTable, SpouseColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasSpouseWith applies the HasEdge predicate on the "spouse" edge with a given conditions (other predicates).
+func HasSpouseWith(preds ...predicate.JiangHuRen) predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, SpouseTable, SpouseColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasMaster applies the HasEdge predicate on the "master" edge.
+func HasMaster() predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(MasterTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, MasterTable, MasterColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasMasterWith applies the HasEdge predicate on the "master" edge with a given conditions (other predicates).
+func HasMasterWith(preds ...predicate.JiangHuRen) predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, MasterTable, MasterColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasApprentices applies the HasEdge predicate on the "apprentices" edge.
+func HasApprentices() predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ApprenticesTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, ApprenticesTable, ApprenticesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasApprenticesWith applies the HasEdge predicate on the "apprentices" edge with a given conditions (other predicates).
+func HasApprenticesWith(preds ...predicate.JiangHuRen) predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, ApprenticesTable, ApprenticesColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasFollowers applies the HasEdge predicate on the "followers" edge.
+func HasFollowers() predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(FollowersTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, FollowersTable, FollowersPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasFollowersWith applies the HasEdge predicate on the "followers" edge with a given conditions (other predicates).
+func HasFollowersWith(preds ...predicate.JiangHuRen) predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, FollowersTable, FollowersPrimaryKey...),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasFollowing applies the HasEdge predicate on the "following" edge.
+func HasFollowing() predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(FollowingTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, FollowingTable, FollowingPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasFollowingWith applies the HasEdge predicate on the "following" edge with a given conditions (other predicates).
+func HasFollowingWith(preds ...predicate.JiangHuRen) predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, FollowingTable, FollowingPrimaryKey...),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasFriends applies the HasEdge predicate on the "friends" edge.
+func HasFriends() predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(FriendsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, FriendsTable, FriendsPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasFriendsWith applies the HasEdge predicate on the "friends" edge with a given conditions (other predicates).
+func HasFriendsWith(preds ...predicate.JiangHuRen) predicate.JiangHuRen {
+	return predicate.JiangHuRen(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, FriendsTable, FriendsPrimaryKey...),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 

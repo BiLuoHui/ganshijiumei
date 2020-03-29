@@ -15,6 +15,8 @@ type Tx struct {
 	JiangHuRen *JiangHuRenClient
 	// MenPai is the client for interacting with the MenPai builders.
 	MenPai *MenPaiClient
+	// Weapon is the client for interacting with the Weapon builders.
+	Weapon *WeaponClient
 	// WuGong is the client for interacting with the WuGong builders.
 	WuGong *WuGongClient
 }
@@ -39,6 +41,7 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.JiangHuRen = NewJiangHuRenClient(tx.config)
 	tx.MenPai = NewMenPaiClient(tx.config)
+	tx.Weapon = NewWeaponClient(tx.config)
 	tx.WuGong = NewWuGongClient(tx.config)
 }
 

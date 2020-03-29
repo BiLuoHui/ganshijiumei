@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"github.com/BiLuoHui/ganshijiumei/ent/jianghuren"
+	"github.com/BiLuoHui/ganshijiumei/ent/menpai"
+	"github.com/BiLuoHui/ganshijiumei/ent/weapon"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 )
@@ -60,6 +62,148 @@ func (jhrc *JiangHuRenCreate) SetAge(u uint) *JiangHuRenCreate {
 	return jhrc
 }
 
+// SetSex sets the sex field.
+func (jhrc *JiangHuRenCreate) SetSex(b bool) *JiangHuRenCreate {
+	jhrc.mutation.SetSex(b)
+	return jhrc
+}
+
+// SetWeaponID sets the weapon edge to Weapon by id.
+func (jhrc *JiangHuRenCreate) SetWeaponID(id int) *JiangHuRenCreate {
+	jhrc.mutation.SetWeaponID(id)
+	return jhrc
+}
+
+// SetNillableWeaponID sets the weapon edge to Weapon by id if the given value is not nil.
+func (jhrc *JiangHuRenCreate) SetNillableWeaponID(id *int) *JiangHuRenCreate {
+	if id != nil {
+		jhrc = jhrc.SetWeaponID(*id)
+	}
+	return jhrc
+}
+
+// SetWeapon sets the weapon edge to Weapon.
+func (jhrc *JiangHuRenCreate) SetWeapon(w *Weapon) *JiangHuRenCreate {
+	return jhrc.SetWeaponID(w.ID)
+}
+
+// SetMenpaiID sets the menpai edge to MenPai by id.
+func (jhrc *JiangHuRenCreate) SetMenpaiID(id int) *JiangHuRenCreate {
+	jhrc.mutation.SetMenpaiID(id)
+	return jhrc
+}
+
+// SetNillableMenpaiID sets the menpai edge to MenPai by id if the given value is not nil.
+func (jhrc *JiangHuRenCreate) SetNillableMenpaiID(id *int) *JiangHuRenCreate {
+	if id != nil {
+		jhrc = jhrc.SetMenpaiID(*id)
+	}
+	return jhrc
+}
+
+// SetMenpai sets the menpai edge to MenPai.
+func (jhrc *JiangHuRenCreate) SetMenpai(m *MenPai) *JiangHuRenCreate {
+	return jhrc.SetMenpaiID(m.ID)
+}
+
+// SetSpouseID sets the spouse edge to JiangHuRen by id.
+func (jhrc *JiangHuRenCreate) SetSpouseID(id int) *JiangHuRenCreate {
+	jhrc.mutation.SetSpouseID(id)
+	return jhrc
+}
+
+// SetNillableSpouseID sets the spouse edge to JiangHuRen by id if the given value is not nil.
+func (jhrc *JiangHuRenCreate) SetNillableSpouseID(id *int) *JiangHuRenCreate {
+	if id != nil {
+		jhrc = jhrc.SetSpouseID(*id)
+	}
+	return jhrc
+}
+
+// SetSpouse sets the spouse edge to JiangHuRen.
+func (jhrc *JiangHuRenCreate) SetSpouse(j *JiangHuRen) *JiangHuRenCreate {
+	return jhrc.SetSpouseID(j.ID)
+}
+
+// SetMasterID sets the master edge to JiangHuRen by id.
+func (jhrc *JiangHuRenCreate) SetMasterID(id int) *JiangHuRenCreate {
+	jhrc.mutation.SetMasterID(id)
+	return jhrc
+}
+
+// SetNillableMasterID sets the master edge to JiangHuRen by id if the given value is not nil.
+func (jhrc *JiangHuRenCreate) SetNillableMasterID(id *int) *JiangHuRenCreate {
+	if id != nil {
+		jhrc = jhrc.SetMasterID(*id)
+	}
+	return jhrc
+}
+
+// SetMaster sets the master edge to JiangHuRen.
+func (jhrc *JiangHuRenCreate) SetMaster(j *JiangHuRen) *JiangHuRenCreate {
+	return jhrc.SetMasterID(j.ID)
+}
+
+// AddApprenticeIDs adds the apprentices edge to JiangHuRen by ids.
+func (jhrc *JiangHuRenCreate) AddApprenticeIDs(ids ...int) *JiangHuRenCreate {
+	jhrc.mutation.AddApprenticeIDs(ids...)
+	return jhrc
+}
+
+// AddApprentices adds the apprentices edges to JiangHuRen.
+func (jhrc *JiangHuRenCreate) AddApprentices(j ...*JiangHuRen) *JiangHuRenCreate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhrc.AddApprenticeIDs(ids...)
+}
+
+// AddFollowerIDs adds the followers edge to JiangHuRen by ids.
+func (jhrc *JiangHuRenCreate) AddFollowerIDs(ids ...int) *JiangHuRenCreate {
+	jhrc.mutation.AddFollowerIDs(ids...)
+	return jhrc
+}
+
+// AddFollowers adds the followers edges to JiangHuRen.
+func (jhrc *JiangHuRenCreate) AddFollowers(j ...*JiangHuRen) *JiangHuRenCreate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhrc.AddFollowerIDs(ids...)
+}
+
+// AddFollowingIDs adds the following edge to JiangHuRen by ids.
+func (jhrc *JiangHuRenCreate) AddFollowingIDs(ids ...int) *JiangHuRenCreate {
+	jhrc.mutation.AddFollowingIDs(ids...)
+	return jhrc
+}
+
+// AddFollowing adds the following edges to JiangHuRen.
+func (jhrc *JiangHuRenCreate) AddFollowing(j ...*JiangHuRen) *JiangHuRenCreate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhrc.AddFollowingIDs(ids...)
+}
+
+// AddFriendIDs adds the friends edge to JiangHuRen by ids.
+func (jhrc *JiangHuRenCreate) AddFriendIDs(ids ...int) *JiangHuRenCreate {
+	jhrc.mutation.AddFriendIDs(ids...)
+	return jhrc
+}
+
+// AddFriends adds the friends edges to JiangHuRen.
+func (jhrc *JiangHuRenCreate) AddFriends(j ...*JiangHuRen) *JiangHuRenCreate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhrc.AddFriendIDs(ids...)
+}
+
 // Save creates the JiangHuRen in the database.
 func (jhrc *JiangHuRenCreate) Save(ctx context.Context) (*JiangHuRen, error) {
 	if _, ok := jhrc.mutation.CreatedAt(); !ok {
@@ -75,6 +219,9 @@ func (jhrc *JiangHuRenCreate) Save(ctx context.Context) (*JiangHuRen, error) {
 	}
 	if _, ok := jhrc.mutation.Age(); !ok {
 		return nil, errors.New("ent: missing required field \"age\"")
+	}
+	if _, ok := jhrc.mutation.Sex(); !ok {
+		return nil, errors.New("ent: missing required field \"sex\"")
 	}
 	var (
 		err  error
@@ -153,6 +300,166 @@ func (jhrc *JiangHuRenCreate) sqlSave(ctx context.Context) (*JiangHuRen, error) 
 			Column: jianghuren.FieldAge,
 		})
 		jhr.Age = value
+	}
+	if value, ok := jhrc.mutation.Sex(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: jianghuren.FieldSex,
+		})
+		jhr.Sex = value
+	}
+	if nodes := jhrc.mutation.WeaponIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   jianghuren.WeaponTable,
+			Columns: []string{jianghuren.WeaponColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: weapon.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := jhrc.mutation.MenpaiIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   jianghuren.MenpaiTable,
+			Columns: []string{jianghuren.MenpaiColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: menpai.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := jhrc.mutation.SpouseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   jianghuren.SpouseTable,
+			Columns: []string{jianghuren.SpouseColumn},
+			Bidi:    true,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := jhrc.mutation.MasterIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   jianghuren.MasterTable,
+			Columns: []string{jianghuren.MasterColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := jhrc.mutation.ApprenticesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   jianghuren.ApprenticesTable,
+			Columns: []string{jianghuren.ApprenticesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := jhrc.mutation.FollowersIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   jianghuren.FollowersTable,
+			Columns: jianghuren.FollowersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := jhrc.mutation.FollowingIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   jianghuren.FollowingTable,
+			Columns: jianghuren.FollowingPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := jhrc.mutation.FriendsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   jianghuren.FriendsTable,
+			Columns: jianghuren.FriendsPrimaryKey,
+			Bidi:    true,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if err := sqlgraph.CreateNode(ctx, jhrc.driver, _spec); err != nil {
 		if cerr, ok := isSQLConstraintError(err); ok {

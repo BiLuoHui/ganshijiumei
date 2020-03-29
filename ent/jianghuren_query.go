@@ -4,12 +4,15 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
 
 	"github.com/BiLuoHui/ganshijiumei/ent/jianghuren"
+	"github.com/BiLuoHui/ganshijiumei/ent/menpai"
 	"github.com/BiLuoHui/ganshijiumei/ent/predicate"
+	"github.com/BiLuoHui/ganshijiumei/ent/weapon"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
@@ -23,6 +26,16 @@ type JiangHuRenQuery struct {
 	order      []Order
 	unique     []string
 	predicates []predicate.JiangHuRen
+	// eager-loading edges.
+	withWeapon      *WeaponQuery
+	withMenpai      *MenPaiQuery
+	withSpouse      *JiangHuRenQuery
+	withMaster      *JiangHuRenQuery
+	withApprentices *JiangHuRenQuery
+	withFollowers   *JiangHuRenQuery
+	withFollowing   *JiangHuRenQuery
+	withFriends     *JiangHuRenQuery
+	withFKs         bool
 	// intermediate query.
 	sql *sql.Selector
 }
@@ -49,6 +62,102 @@ func (jhrq *JiangHuRenQuery) Offset(offset int) *JiangHuRenQuery {
 func (jhrq *JiangHuRenQuery) Order(o ...Order) *JiangHuRenQuery {
 	jhrq.order = append(jhrq.order, o...)
 	return jhrq
+}
+
+// QueryWeapon chains the current query on the weapon edge.
+func (jhrq *JiangHuRenQuery) QueryWeapon() *WeaponQuery {
+	query := &WeaponQuery{config: jhrq.config}
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, jhrq.sqlQuery()),
+		sqlgraph.To(weapon.Table, weapon.FieldID),
+		sqlgraph.Edge(sqlgraph.O2O, false, jianghuren.WeaponTable, jianghuren.WeaponColumn),
+	)
+	query.sql = sqlgraph.SetNeighbors(jhrq.driver.Dialect(), step)
+	return query
+}
+
+// QueryMenpai chains the current query on the menpai edge.
+func (jhrq *JiangHuRenQuery) QueryMenpai() *MenPaiQuery {
+	query := &MenPaiQuery{config: jhrq.config}
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, jhrq.sqlQuery()),
+		sqlgraph.To(menpai.Table, menpai.FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, jianghuren.MenpaiTable, jianghuren.MenpaiColumn),
+	)
+	query.sql = sqlgraph.SetNeighbors(jhrq.driver.Dialect(), step)
+	return query
+}
+
+// QuerySpouse chains the current query on the spouse edge.
+func (jhrq *JiangHuRenQuery) QuerySpouse() *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: jhrq.config}
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, jhrq.sqlQuery()),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.O2O, false, jianghuren.SpouseTable, jianghuren.SpouseColumn),
+	)
+	query.sql = sqlgraph.SetNeighbors(jhrq.driver.Dialect(), step)
+	return query
+}
+
+// QueryMaster chains the current query on the master edge.
+func (jhrq *JiangHuRenQuery) QueryMaster() *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: jhrq.config}
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, jhrq.sqlQuery()),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, jianghuren.MasterTable, jianghuren.MasterColumn),
+	)
+	query.sql = sqlgraph.SetNeighbors(jhrq.driver.Dialect(), step)
+	return query
+}
+
+// QueryApprentices chains the current query on the apprentices edge.
+func (jhrq *JiangHuRenQuery) QueryApprentices() *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: jhrq.config}
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, jhrq.sqlQuery()),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, jianghuren.ApprenticesTable, jianghuren.ApprenticesColumn),
+	)
+	query.sql = sqlgraph.SetNeighbors(jhrq.driver.Dialect(), step)
+	return query
+}
+
+// QueryFollowers chains the current query on the followers edge.
+func (jhrq *JiangHuRenQuery) QueryFollowers() *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: jhrq.config}
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, jhrq.sqlQuery()),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, jianghuren.FollowersTable, jianghuren.FollowersPrimaryKey...),
+	)
+	query.sql = sqlgraph.SetNeighbors(jhrq.driver.Dialect(), step)
+	return query
+}
+
+// QueryFollowing chains the current query on the following edge.
+func (jhrq *JiangHuRenQuery) QueryFollowing() *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: jhrq.config}
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, jhrq.sqlQuery()),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, jianghuren.FollowingTable, jianghuren.FollowingPrimaryKey...),
+	)
+	query.sql = sqlgraph.SetNeighbors(jhrq.driver.Dialect(), step)
+	return query
+}
+
+// QueryFriends chains the current query on the friends edge.
+func (jhrq *JiangHuRenQuery) QueryFriends() *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: jhrq.config}
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, jhrq.sqlQuery()),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, jianghuren.FriendsTable, jianghuren.FriendsPrimaryKey...),
+	)
+	query.sql = sqlgraph.SetNeighbors(jhrq.driver.Dialect(), step)
+	return query
 }
 
 // First returns the first JiangHuRen entity in the query. Returns *NotFoundError when no jianghuren was found.
@@ -220,6 +329,94 @@ func (jhrq *JiangHuRenQuery) Clone() *JiangHuRenQuery {
 	}
 }
 
+//  WithWeapon tells the query-builder to eager-loads the nodes that are connected to
+// the "weapon" edge. The optional arguments used to configure the query builder of the edge.
+func (jhrq *JiangHuRenQuery) WithWeapon(opts ...func(*WeaponQuery)) *JiangHuRenQuery {
+	query := &WeaponQuery{config: jhrq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	jhrq.withWeapon = query
+	return jhrq
+}
+
+//  WithMenpai tells the query-builder to eager-loads the nodes that are connected to
+// the "menpai" edge. The optional arguments used to configure the query builder of the edge.
+func (jhrq *JiangHuRenQuery) WithMenpai(opts ...func(*MenPaiQuery)) *JiangHuRenQuery {
+	query := &MenPaiQuery{config: jhrq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	jhrq.withMenpai = query
+	return jhrq
+}
+
+//  WithSpouse tells the query-builder to eager-loads the nodes that are connected to
+// the "spouse" edge. The optional arguments used to configure the query builder of the edge.
+func (jhrq *JiangHuRenQuery) WithSpouse(opts ...func(*JiangHuRenQuery)) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: jhrq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	jhrq.withSpouse = query
+	return jhrq
+}
+
+//  WithMaster tells the query-builder to eager-loads the nodes that are connected to
+// the "master" edge. The optional arguments used to configure the query builder of the edge.
+func (jhrq *JiangHuRenQuery) WithMaster(opts ...func(*JiangHuRenQuery)) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: jhrq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	jhrq.withMaster = query
+	return jhrq
+}
+
+//  WithApprentices tells the query-builder to eager-loads the nodes that are connected to
+// the "apprentices" edge. The optional arguments used to configure the query builder of the edge.
+func (jhrq *JiangHuRenQuery) WithApprentices(opts ...func(*JiangHuRenQuery)) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: jhrq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	jhrq.withApprentices = query
+	return jhrq
+}
+
+//  WithFollowers tells the query-builder to eager-loads the nodes that are connected to
+// the "followers" edge. The optional arguments used to configure the query builder of the edge.
+func (jhrq *JiangHuRenQuery) WithFollowers(opts ...func(*JiangHuRenQuery)) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: jhrq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	jhrq.withFollowers = query
+	return jhrq
+}
+
+//  WithFollowing tells the query-builder to eager-loads the nodes that are connected to
+// the "following" edge. The optional arguments used to configure the query builder of the edge.
+func (jhrq *JiangHuRenQuery) WithFollowing(opts ...func(*JiangHuRenQuery)) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: jhrq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	jhrq.withFollowing = query
+	return jhrq
+}
+
+//  WithFriends tells the query-builder to eager-loads the nodes that are connected to
+// the "friends" edge. The optional arguments used to configure the query builder of the edge.
+func (jhrq *JiangHuRenQuery) WithFriends(opts ...func(*JiangHuRenQuery)) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: jhrq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	jhrq.withFriends = query
+	return jhrq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -263,13 +460,33 @@ func (jhrq *JiangHuRenQuery) Select(field string, fields ...string) *JiangHuRenS
 
 func (jhrq *JiangHuRenQuery) sqlAll(ctx context.Context) ([]*JiangHuRen, error) {
 	var (
-		nodes = []*JiangHuRen{}
-		_spec = jhrq.querySpec()
+		nodes       = []*JiangHuRen{}
+		withFKs     = jhrq.withFKs
+		_spec       = jhrq.querySpec()
+		loadedTypes = [8]bool{
+			jhrq.withWeapon != nil,
+			jhrq.withMenpai != nil,
+			jhrq.withSpouse != nil,
+			jhrq.withMaster != nil,
+			jhrq.withApprentices != nil,
+			jhrq.withFollowers != nil,
+			jhrq.withFollowing != nil,
+			jhrq.withFriends != nil,
+		}
 	)
+	if jhrq.withMenpai != nil || jhrq.withSpouse != nil || jhrq.withMaster != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, jianghuren.ForeignKeys...)
+	}
 	_spec.ScanValues = func() []interface{} {
 		node := &JiangHuRen{config: jhrq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
+		if withFKs {
+			values = append(values, node.fkValues()...)
+		}
 		return values
 	}
 	_spec.Assign = func(values ...interface{}) error {
@@ -277,6 +494,7 @@ func (jhrq *JiangHuRenQuery) sqlAll(ctx context.Context) ([]*JiangHuRen, error) 
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(values...)
 	}
 	if err := sqlgraph.QueryNodes(ctx, jhrq.driver, _spec); err != nil {
@@ -285,6 +503,327 @@ func (jhrq *JiangHuRenQuery) sqlAll(ctx context.Context) ([]*JiangHuRen, error) 
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+
+	if query := jhrq.withWeapon; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*JiangHuRen)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Weapon(func(s *sql.Selector) {
+			s.Where(sql.InValues(jianghuren.WeaponColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.jiang_hu_ren_weapon
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "jiang_hu_ren_weapon" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "jiang_hu_ren_weapon" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Weapon = n
+		}
+	}
+
+	if query := jhrq.withMenpai; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*JiangHuRen)
+		for i := range nodes {
+			if fk := nodes[i].men_pai_disciples; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(menpai.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "men_pai_disciples" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Menpai = n
+			}
+		}
+	}
+
+	if query := jhrq.withSpouse; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*JiangHuRen)
+		for i := range nodes {
+			if fk := nodes[i].jiang_hu_ren_spouse; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(jianghuren.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "jiang_hu_ren_spouse" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Spouse = n
+			}
+		}
+	}
+
+	if query := jhrq.withMaster; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*JiangHuRen)
+		for i := range nodes {
+			if fk := nodes[i].jiang_hu_ren_apprentices; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(jianghuren.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "jiang_hu_ren_apprentices" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Master = n
+			}
+		}
+	}
+
+	if query := jhrq.withApprentices; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*JiangHuRen)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.JiangHuRen(func(s *sql.Selector) {
+			s.Where(sql.InValues(jianghuren.ApprenticesColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.jiang_hu_ren_apprentices
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "jiang_hu_ren_apprentices" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "jiang_hu_ren_apprentices" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Apprentices = append(node.Edges.Apprentices, n)
+		}
+	}
+
+	if query := jhrq.withFollowers; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		ids := make(map[int]*JiangHuRen, len(nodes))
+		for _, node := range nodes {
+			ids[node.ID] = node
+			fks = append(fks, node.ID)
+		}
+		var (
+			edgeids []int
+			edges   = make(map[int][]*JiangHuRen)
+		)
+		_spec := &sqlgraph.EdgeQuerySpec{
+			Edge: &sqlgraph.EdgeSpec{
+				Inverse: true,
+				Table:   jianghuren.FollowersTable,
+				Columns: jianghuren.FollowersPrimaryKey,
+			},
+			Predicate: func(s *sql.Selector) {
+				s.Where(sql.InValues(jianghuren.FollowersPrimaryKey[1], fks...))
+			},
+
+			ScanValues: func() [2]interface{} {
+				return [2]interface{}{&sql.NullInt64{}, &sql.NullInt64{}}
+			},
+			Assign: func(out, in interface{}) error {
+				eout, ok := out.(*sql.NullInt64)
+				if !ok || eout == nil {
+					return fmt.Errorf("unexpected id value for edge-out")
+				}
+				ein, ok := in.(*sql.NullInt64)
+				if !ok || ein == nil {
+					return fmt.Errorf("unexpected id value for edge-in")
+				}
+				outValue := int(eout.Int64)
+				inValue := int(ein.Int64)
+				node, ok := ids[outValue]
+				if !ok {
+					return fmt.Errorf("unexpected node id in edges: %v", outValue)
+				}
+				edgeids = append(edgeids, inValue)
+				edges[inValue] = append(edges[inValue], node)
+				return nil
+			},
+		}
+		if err := sqlgraph.QueryEdges(ctx, jhrq.driver, _spec); err != nil {
+			return nil, fmt.Errorf(`query edges "followers": %v`, err)
+		}
+		query.Where(jianghuren.IDIn(edgeids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := edges[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected "followers" node returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Followers = append(nodes[i].Edges.Followers, n)
+			}
+		}
+	}
+
+	if query := jhrq.withFollowing; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		ids := make(map[int]*JiangHuRen, len(nodes))
+		for _, node := range nodes {
+			ids[node.ID] = node
+			fks = append(fks, node.ID)
+		}
+		var (
+			edgeids []int
+			edges   = make(map[int][]*JiangHuRen)
+		)
+		_spec := &sqlgraph.EdgeQuerySpec{
+			Edge: &sqlgraph.EdgeSpec{
+				Inverse: false,
+				Table:   jianghuren.FollowingTable,
+				Columns: jianghuren.FollowingPrimaryKey,
+			},
+			Predicate: func(s *sql.Selector) {
+				s.Where(sql.InValues(jianghuren.FollowingPrimaryKey[0], fks...))
+			},
+
+			ScanValues: func() [2]interface{} {
+				return [2]interface{}{&sql.NullInt64{}, &sql.NullInt64{}}
+			},
+			Assign: func(out, in interface{}) error {
+				eout, ok := out.(*sql.NullInt64)
+				if !ok || eout == nil {
+					return fmt.Errorf("unexpected id value for edge-out")
+				}
+				ein, ok := in.(*sql.NullInt64)
+				if !ok || ein == nil {
+					return fmt.Errorf("unexpected id value for edge-in")
+				}
+				outValue := int(eout.Int64)
+				inValue := int(ein.Int64)
+				node, ok := ids[outValue]
+				if !ok {
+					return fmt.Errorf("unexpected node id in edges: %v", outValue)
+				}
+				edgeids = append(edgeids, inValue)
+				edges[inValue] = append(edges[inValue], node)
+				return nil
+			},
+		}
+		if err := sqlgraph.QueryEdges(ctx, jhrq.driver, _spec); err != nil {
+			return nil, fmt.Errorf(`query edges "following": %v`, err)
+		}
+		query.Where(jianghuren.IDIn(edgeids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := edges[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected "following" node returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Following = append(nodes[i].Edges.Following, n)
+			}
+		}
+	}
+
+	if query := jhrq.withFriends; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		ids := make(map[int]*JiangHuRen, len(nodes))
+		for _, node := range nodes {
+			ids[node.ID] = node
+			fks = append(fks, node.ID)
+		}
+		var (
+			edgeids []int
+			edges   = make(map[int][]*JiangHuRen)
+		)
+		_spec := &sqlgraph.EdgeQuerySpec{
+			Edge: &sqlgraph.EdgeSpec{
+				Inverse: false,
+				Table:   jianghuren.FriendsTable,
+				Columns: jianghuren.FriendsPrimaryKey,
+			},
+			Predicate: func(s *sql.Selector) {
+				s.Where(sql.InValues(jianghuren.FriendsPrimaryKey[0], fks...))
+			},
+
+			ScanValues: func() [2]interface{} {
+				return [2]interface{}{&sql.NullInt64{}, &sql.NullInt64{}}
+			},
+			Assign: func(out, in interface{}) error {
+				eout, ok := out.(*sql.NullInt64)
+				if !ok || eout == nil {
+					return fmt.Errorf("unexpected id value for edge-out")
+				}
+				ein, ok := in.(*sql.NullInt64)
+				if !ok || ein == nil {
+					return fmt.Errorf("unexpected id value for edge-in")
+				}
+				outValue := int(eout.Int64)
+				inValue := int(ein.Int64)
+				node, ok := ids[outValue]
+				if !ok {
+					return fmt.Errorf("unexpected node id in edges: %v", outValue)
+				}
+				edgeids = append(edgeids, inValue)
+				edges[inValue] = append(edges[inValue], node)
+				return nil
+			},
+		}
+		if err := sqlgraph.QueryEdges(ctx, jhrq.driver, _spec); err != nil {
+			return nil, fmt.Errorf(`query edges "friends": %v`, err)
+		}
+		query.Where(jianghuren.IDIn(edgeids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := edges[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected "friends" node returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Friends = append(nodes[i].Edges.Friends, n)
+			}
+		}
+	}
+
 	return nodes, nil
 }
 

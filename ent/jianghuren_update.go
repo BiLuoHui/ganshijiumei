@@ -8,7 +8,9 @@ import (
 	"time"
 
 	"github.com/BiLuoHui/ganshijiumei/ent/jianghuren"
+	"github.com/BiLuoHui/ganshijiumei/ent/menpai"
 	"github.com/BiLuoHui/ganshijiumei/ent/predicate"
+	"github.com/BiLuoHui/ganshijiumei/ent/weapon"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
@@ -53,12 +55,239 @@ func (jhru *JiangHuRenUpdate) AddAge(u uint) *JiangHuRenUpdate {
 	return jhru
 }
 
+// SetSex sets the sex field.
+func (jhru *JiangHuRenUpdate) SetSex(b bool) *JiangHuRenUpdate {
+	jhru.mutation.SetSex(b)
+	return jhru
+}
+
+// SetWeaponID sets the weapon edge to Weapon by id.
+func (jhru *JiangHuRenUpdate) SetWeaponID(id int) *JiangHuRenUpdate {
+	jhru.mutation.SetWeaponID(id)
+	return jhru
+}
+
+// SetNillableWeaponID sets the weapon edge to Weapon by id if the given value is not nil.
+func (jhru *JiangHuRenUpdate) SetNillableWeaponID(id *int) *JiangHuRenUpdate {
+	if id != nil {
+		jhru = jhru.SetWeaponID(*id)
+	}
+	return jhru
+}
+
+// SetWeapon sets the weapon edge to Weapon.
+func (jhru *JiangHuRenUpdate) SetWeapon(w *Weapon) *JiangHuRenUpdate {
+	return jhru.SetWeaponID(w.ID)
+}
+
+// SetMenpaiID sets the menpai edge to MenPai by id.
+func (jhru *JiangHuRenUpdate) SetMenpaiID(id int) *JiangHuRenUpdate {
+	jhru.mutation.SetMenpaiID(id)
+	return jhru
+}
+
+// SetNillableMenpaiID sets the menpai edge to MenPai by id if the given value is not nil.
+func (jhru *JiangHuRenUpdate) SetNillableMenpaiID(id *int) *JiangHuRenUpdate {
+	if id != nil {
+		jhru = jhru.SetMenpaiID(*id)
+	}
+	return jhru
+}
+
+// SetMenpai sets the menpai edge to MenPai.
+func (jhru *JiangHuRenUpdate) SetMenpai(m *MenPai) *JiangHuRenUpdate {
+	return jhru.SetMenpaiID(m.ID)
+}
+
+// SetSpouseID sets the spouse edge to JiangHuRen by id.
+func (jhru *JiangHuRenUpdate) SetSpouseID(id int) *JiangHuRenUpdate {
+	jhru.mutation.SetSpouseID(id)
+	return jhru
+}
+
+// SetNillableSpouseID sets the spouse edge to JiangHuRen by id if the given value is not nil.
+func (jhru *JiangHuRenUpdate) SetNillableSpouseID(id *int) *JiangHuRenUpdate {
+	if id != nil {
+		jhru = jhru.SetSpouseID(*id)
+	}
+	return jhru
+}
+
+// SetSpouse sets the spouse edge to JiangHuRen.
+func (jhru *JiangHuRenUpdate) SetSpouse(j *JiangHuRen) *JiangHuRenUpdate {
+	return jhru.SetSpouseID(j.ID)
+}
+
+// SetMasterID sets the master edge to JiangHuRen by id.
+func (jhru *JiangHuRenUpdate) SetMasterID(id int) *JiangHuRenUpdate {
+	jhru.mutation.SetMasterID(id)
+	return jhru
+}
+
+// SetNillableMasterID sets the master edge to JiangHuRen by id if the given value is not nil.
+func (jhru *JiangHuRenUpdate) SetNillableMasterID(id *int) *JiangHuRenUpdate {
+	if id != nil {
+		jhru = jhru.SetMasterID(*id)
+	}
+	return jhru
+}
+
+// SetMaster sets the master edge to JiangHuRen.
+func (jhru *JiangHuRenUpdate) SetMaster(j *JiangHuRen) *JiangHuRenUpdate {
+	return jhru.SetMasterID(j.ID)
+}
+
+// AddApprenticeIDs adds the apprentices edge to JiangHuRen by ids.
+func (jhru *JiangHuRenUpdate) AddApprenticeIDs(ids ...int) *JiangHuRenUpdate {
+	jhru.mutation.AddApprenticeIDs(ids...)
+	return jhru
+}
+
+// AddApprentices adds the apprentices edges to JiangHuRen.
+func (jhru *JiangHuRenUpdate) AddApprentices(j ...*JiangHuRen) *JiangHuRenUpdate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhru.AddApprenticeIDs(ids...)
+}
+
+// AddFollowerIDs adds the followers edge to JiangHuRen by ids.
+func (jhru *JiangHuRenUpdate) AddFollowerIDs(ids ...int) *JiangHuRenUpdate {
+	jhru.mutation.AddFollowerIDs(ids...)
+	return jhru
+}
+
+// AddFollowers adds the followers edges to JiangHuRen.
+func (jhru *JiangHuRenUpdate) AddFollowers(j ...*JiangHuRen) *JiangHuRenUpdate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhru.AddFollowerIDs(ids...)
+}
+
+// AddFollowingIDs adds the following edge to JiangHuRen by ids.
+func (jhru *JiangHuRenUpdate) AddFollowingIDs(ids ...int) *JiangHuRenUpdate {
+	jhru.mutation.AddFollowingIDs(ids...)
+	return jhru
+}
+
+// AddFollowing adds the following edges to JiangHuRen.
+func (jhru *JiangHuRenUpdate) AddFollowing(j ...*JiangHuRen) *JiangHuRenUpdate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhru.AddFollowingIDs(ids...)
+}
+
+// AddFriendIDs adds the friends edge to JiangHuRen by ids.
+func (jhru *JiangHuRenUpdate) AddFriendIDs(ids ...int) *JiangHuRenUpdate {
+	jhru.mutation.AddFriendIDs(ids...)
+	return jhru
+}
+
+// AddFriends adds the friends edges to JiangHuRen.
+func (jhru *JiangHuRenUpdate) AddFriends(j ...*JiangHuRen) *JiangHuRenUpdate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhru.AddFriendIDs(ids...)
+}
+
+// ClearWeapon clears the weapon edge to Weapon.
+func (jhru *JiangHuRenUpdate) ClearWeapon() *JiangHuRenUpdate {
+	jhru.mutation.ClearWeapon()
+	return jhru
+}
+
+// ClearMenpai clears the menpai edge to MenPai.
+func (jhru *JiangHuRenUpdate) ClearMenpai() *JiangHuRenUpdate {
+	jhru.mutation.ClearMenpai()
+	return jhru
+}
+
+// ClearSpouse clears the spouse edge to JiangHuRen.
+func (jhru *JiangHuRenUpdate) ClearSpouse() *JiangHuRenUpdate {
+	jhru.mutation.ClearSpouse()
+	return jhru
+}
+
+// ClearMaster clears the master edge to JiangHuRen.
+func (jhru *JiangHuRenUpdate) ClearMaster() *JiangHuRenUpdate {
+	jhru.mutation.ClearMaster()
+	return jhru
+}
+
+// RemoveApprenticeIDs removes the apprentices edge to JiangHuRen by ids.
+func (jhru *JiangHuRenUpdate) RemoveApprenticeIDs(ids ...int) *JiangHuRenUpdate {
+	jhru.mutation.RemoveApprenticeIDs(ids...)
+	return jhru
+}
+
+// RemoveApprentices removes apprentices edges to JiangHuRen.
+func (jhru *JiangHuRenUpdate) RemoveApprentices(j ...*JiangHuRen) *JiangHuRenUpdate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhru.RemoveApprenticeIDs(ids...)
+}
+
+// RemoveFollowerIDs removes the followers edge to JiangHuRen by ids.
+func (jhru *JiangHuRenUpdate) RemoveFollowerIDs(ids ...int) *JiangHuRenUpdate {
+	jhru.mutation.RemoveFollowerIDs(ids...)
+	return jhru
+}
+
+// RemoveFollowers removes followers edges to JiangHuRen.
+func (jhru *JiangHuRenUpdate) RemoveFollowers(j ...*JiangHuRen) *JiangHuRenUpdate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhru.RemoveFollowerIDs(ids...)
+}
+
+// RemoveFollowingIDs removes the following edge to JiangHuRen by ids.
+func (jhru *JiangHuRenUpdate) RemoveFollowingIDs(ids ...int) *JiangHuRenUpdate {
+	jhru.mutation.RemoveFollowingIDs(ids...)
+	return jhru
+}
+
+// RemoveFollowing removes following edges to JiangHuRen.
+func (jhru *JiangHuRenUpdate) RemoveFollowing(j ...*JiangHuRen) *JiangHuRenUpdate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhru.RemoveFollowingIDs(ids...)
+}
+
+// RemoveFriendIDs removes the friends edge to JiangHuRen by ids.
+func (jhru *JiangHuRenUpdate) RemoveFriendIDs(ids ...int) *JiangHuRenUpdate {
+	jhru.mutation.RemoveFriendIDs(ids...)
+	return jhru
+}
+
+// RemoveFriends removes friends edges to JiangHuRen.
+func (jhru *JiangHuRenUpdate) RemoveFriends(j ...*JiangHuRen) *JiangHuRenUpdate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhru.RemoveFriendIDs(ids...)
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (jhru *JiangHuRenUpdate) Save(ctx context.Context) (int, error) {
 	if _, ok := jhru.mutation.UpdatedAt(); !ok {
 		v := jianghuren.UpdateDefaultUpdatedAt()
 		jhru.mutation.SetUpdatedAt(v)
 	}
+
 	var (
 		err      error
 		affected int
@@ -153,6 +382,305 @@ func (jhru *JiangHuRenUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: jianghuren.FieldAge,
 		})
 	}
+	if value, ok := jhru.mutation.Sex(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: jianghuren.FieldSex,
+		})
+	}
+	if jhru.mutation.WeaponCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   jianghuren.WeaponTable,
+			Columns: []string{jianghuren.WeaponColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: weapon.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhru.mutation.WeaponIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   jianghuren.WeaponTable,
+			Columns: []string{jianghuren.WeaponColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: weapon.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if jhru.mutation.MenpaiCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   jianghuren.MenpaiTable,
+			Columns: []string{jianghuren.MenpaiColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: menpai.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhru.mutation.MenpaiIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   jianghuren.MenpaiTable,
+			Columns: []string{jianghuren.MenpaiColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: menpai.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if jhru.mutation.SpouseCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   jianghuren.SpouseTable,
+			Columns: []string{jianghuren.SpouseColumn},
+			Bidi:    true,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhru.mutation.SpouseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   jianghuren.SpouseTable,
+			Columns: []string{jianghuren.SpouseColumn},
+			Bidi:    true,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if jhru.mutation.MasterCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   jianghuren.MasterTable,
+			Columns: []string{jianghuren.MasterColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhru.mutation.MasterIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   jianghuren.MasterTable,
+			Columns: []string{jianghuren.MasterColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := jhru.mutation.RemovedApprenticesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   jianghuren.ApprenticesTable,
+			Columns: []string{jianghuren.ApprenticesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhru.mutation.ApprenticesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   jianghuren.ApprenticesTable,
+			Columns: []string{jianghuren.ApprenticesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := jhru.mutation.RemovedFollowersIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   jianghuren.FollowersTable,
+			Columns: jianghuren.FollowersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhru.mutation.FollowersIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   jianghuren.FollowersTable,
+			Columns: jianghuren.FollowersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := jhru.mutation.RemovedFollowingIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   jianghuren.FollowingTable,
+			Columns: jianghuren.FollowingPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhru.mutation.FollowingIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   jianghuren.FollowingTable,
+			Columns: jianghuren.FollowingPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := jhru.mutation.RemovedFriendsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   jianghuren.FriendsTable,
+			Columns: jianghuren.FriendsPrimaryKey,
+			Bidi:    true,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhru.mutation.FriendsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   jianghuren.FriendsTable,
+			Columns: jianghuren.FriendsPrimaryKey,
+			Bidi:    true,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, jhru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{jianghuren.Label}
@@ -196,12 +724,239 @@ func (jhruo *JiangHuRenUpdateOne) AddAge(u uint) *JiangHuRenUpdateOne {
 	return jhruo
 }
 
+// SetSex sets the sex field.
+func (jhruo *JiangHuRenUpdateOne) SetSex(b bool) *JiangHuRenUpdateOne {
+	jhruo.mutation.SetSex(b)
+	return jhruo
+}
+
+// SetWeaponID sets the weapon edge to Weapon by id.
+func (jhruo *JiangHuRenUpdateOne) SetWeaponID(id int) *JiangHuRenUpdateOne {
+	jhruo.mutation.SetWeaponID(id)
+	return jhruo
+}
+
+// SetNillableWeaponID sets the weapon edge to Weapon by id if the given value is not nil.
+func (jhruo *JiangHuRenUpdateOne) SetNillableWeaponID(id *int) *JiangHuRenUpdateOne {
+	if id != nil {
+		jhruo = jhruo.SetWeaponID(*id)
+	}
+	return jhruo
+}
+
+// SetWeapon sets the weapon edge to Weapon.
+func (jhruo *JiangHuRenUpdateOne) SetWeapon(w *Weapon) *JiangHuRenUpdateOne {
+	return jhruo.SetWeaponID(w.ID)
+}
+
+// SetMenpaiID sets the menpai edge to MenPai by id.
+func (jhruo *JiangHuRenUpdateOne) SetMenpaiID(id int) *JiangHuRenUpdateOne {
+	jhruo.mutation.SetMenpaiID(id)
+	return jhruo
+}
+
+// SetNillableMenpaiID sets the menpai edge to MenPai by id if the given value is not nil.
+func (jhruo *JiangHuRenUpdateOne) SetNillableMenpaiID(id *int) *JiangHuRenUpdateOne {
+	if id != nil {
+		jhruo = jhruo.SetMenpaiID(*id)
+	}
+	return jhruo
+}
+
+// SetMenpai sets the menpai edge to MenPai.
+func (jhruo *JiangHuRenUpdateOne) SetMenpai(m *MenPai) *JiangHuRenUpdateOne {
+	return jhruo.SetMenpaiID(m.ID)
+}
+
+// SetSpouseID sets the spouse edge to JiangHuRen by id.
+func (jhruo *JiangHuRenUpdateOne) SetSpouseID(id int) *JiangHuRenUpdateOne {
+	jhruo.mutation.SetSpouseID(id)
+	return jhruo
+}
+
+// SetNillableSpouseID sets the spouse edge to JiangHuRen by id if the given value is not nil.
+func (jhruo *JiangHuRenUpdateOne) SetNillableSpouseID(id *int) *JiangHuRenUpdateOne {
+	if id != nil {
+		jhruo = jhruo.SetSpouseID(*id)
+	}
+	return jhruo
+}
+
+// SetSpouse sets the spouse edge to JiangHuRen.
+func (jhruo *JiangHuRenUpdateOne) SetSpouse(j *JiangHuRen) *JiangHuRenUpdateOne {
+	return jhruo.SetSpouseID(j.ID)
+}
+
+// SetMasterID sets the master edge to JiangHuRen by id.
+func (jhruo *JiangHuRenUpdateOne) SetMasterID(id int) *JiangHuRenUpdateOne {
+	jhruo.mutation.SetMasterID(id)
+	return jhruo
+}
+
+// SetNillableMasterID sets the master edge to JiangHuRen by id if the given value is not nil.
+func (jhruo *JiangHuRenUpdateOne) SetNillableMasterID(id *int) *JiangHuRenUpdateOne {
+	if id != nil {
+		jhruo = jhruo.SetMasterID(*id)
+	}
+	return jhruo
+}
+
+// SetMaster sets the master edge to JiangHuRen.
+func (jhruo *JiangHuRenUpdateOne) SetMaster(j *JiangHuRen) *JiangHuRenUpdateOne {
+	return jhruo.SetMasterID(j.ID)
+}
+
+// AddApprenticeIDs adds the apprentices edge to JiangHuRen by ids.
+func (jhruo *JiangHuRenUpdateOne) AddApprenticeIDs(ids ...int) *JiangHuRenUpdateOne {
+	jhruo.mutation.AddApprenticeIDs(ids...)
+	return jhruo
+}
+
+// AddApprentices adds the apprentices edges to JiangHuRen.
+func (jhruo *JiangHuRenUpdateOne) AddApprentices(j ...*JiangHuRen) *JiangHuRenUpdateOne {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhruo.AddApprenticeIDs(ids...)
+}
+
+// AddFollowerIDs adds the followers edge to JiangHuRen by ids.
+func (jhruo *JiangHuRenUpdateOne) AddFollowerIDs(ids ...int) *JiangHuRenUpdateOne {
+	jhruo.mutation.AddFollowerIDs(ids...)
+	return jhruo
+}
+
+// AddFollowers adds the followers edges to JiangHuRen.
+func (jhruo *JiangHuRenUpdateOne) AddFollowers(j ...*JiangHuRen) *JiangHuRenUpdateOne {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhruo.AddFollowerIDs(ids...)
+}
+
+// AddFollowingIDs adds the following edge to JiangHuRen by ids.
+func (jhruo *JiangHuRenUpdateOne) AddFollowingIDs(ids ...int) *JiangHuRenUpdateOne {
+	jhruo.mutation.AddFollowingIDs(ids...)
+	return jhruo
+}
+
+// AddFollowing adds the following edges to JiangHuRen.
+func (jhruo *JiangHuRenUpdateOne) AddFollowing(j ...*JiangHuRen) *JiangHuRenUpdateOne {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhruo.AddFollowingIDs(ids...)
+}
+
+// AddFriendIDs adds the friends edge to JiangHuRen by ids.
+func (jhruo *JiangHuRenUpdateOne) AddFriendIDs(ids ...int) *JiangHuRenUpdateOne {
+	jhruo.mutation.AddFriendIDs(ids...)
+	return jhruo
+}
+
+// AddFriends adds the friends edges to JiangHuRen.
+func (jhruo *JiangHuRenUpdateOne) AddFriends(j ...*JiangHuRen) *JiangHuRenUpdateOne {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhruo.AddFriendIDs(ids...)
+}
+
+// ClearWeapon clears the weapon edge to Weapon.
+func (jhruo *JiangHuRenUpdateOne) ClearWeapon() *JiangHuRenUpdateOne {
+	jhruo.mutation.ClearWeapon()
+	return jhruo
+}
+
+// ClearMenpai clears the menpai edge to MenPai.
+func (jhruo *JiangHuRenUpdateOne) ClearMenpai() *JiangHuRenUpdateOne {
+	jhruo.mutation.ClearMenpai()
+	return jhruo
+}
+
+// ClearSpouse clears the spouse edge to JiangHuRen.
+func (jhruo *JiangHuRenUpdateOne) ClearSpouse() *JiangHuRenUpdateOne {
+	jhruo.mutation.ClearSpouse()
+	return jhruo
+}
+
+// ClearMaster clears the master edge to JiangHuRen.
+func (jhruo *JiangHuRenUpdateOne) ClearMaster() *JiangHuRenUpdateOne {
+	jhruo.mutation.ClearMaster()
+	return jhruo
+}
+
+// RemoveApprenticeIDs removes the apprentices edge to JiangHuRen by ids.
+func (jhruo *JiangHuRenUpdateOne) RemoveApprenticeIDs(ids ...int) *JiangHuRenUpdateOne {
+	jhruo.mutation.RemoveApprenticeIDs(ids...)
+	return jhruo
+}
+
+// RemoveApprentices removes apprentices edges to JiangHuRen.
+func (jhruo *JiangHuRenUpdateOne) RemoveApprentices(j ...*JiangHuRen) *JiangHuRenUpdateOne {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhruo.RemoveApprenticeIDs(ids...)
+}
+
+// RemoveFollowerIDs removes the followers edge to JiangHuRen by ids.
+func (jhruo *JiangHuRenUpdateOne) RemoveFollowerIDs(ids ...int) *JiangHuRenUpdateOne {
+	jhruo.mutation.RemoveFollowerIDs(ids...)
+	return jhruo
+}
+
+// RemoveFollowers removes followers edges to JiangHuRen.
+func (jhruo *JiangHuRenUpdateOne) RemoveFollowers(j ...*JiangHuRen) *JiangHuRenUpdateOne {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhruo.RemoveFollowerIDs(ids...)
+}
+
+// RemoveFollowingIDs removes the following edge to JiangHuRen by ids.
+func (jhruo *JiangHuRenUpdateOne) RemoveFollowingIDs(ids ...int) *JiangHuRenUpdateOne {
+	jhruo.mutation.RemoveFollowingIDs(ids...)
+	return jhruo
+}
+
+// RemoveFollowing removes following edges to JiangHuRen.
+func (jhruo *JiangHuRenUpdateOne) RemoveFollowing(j ...*JiangHuRen) *JiangHuRenUpdateOne {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhruo.RemoveFollowingIDs(ids...)
+}
+
+// RemoveFriendIDs removes the friends edge to JiangHuRen by ids.
+func (jhruo *JiangHuRenUpdateOne) RemoveFriendIDs(ids ...int) *JiangHuRenUpdateOne {
+	jhruo.mutation.RemoveFriendIDs(ids...)
+	return jhruo
+}
+
+// RemoveFriends removes friends edges to JiangHuRen.
+func (jhruo *JiangHuRenUpdateOne) RemoveFriends(j ...*JiangHuRen) *JiangHuRenUpdateOne {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return jhruo.RemoveFriendIDs(ids...)
+}
+
 // Save executes the query and returns the updated entity.
 func (jhruo *JiangHuRenUpdateOne) Save(ctx context.Context) (*JiangHuRen, error) {
 	if _, ok := jhruo.mutation.UpdatedAt(); !ok {
 		v := jianghuren.UpdateDefaultUpdatedAt()
 		jhruo.mutation.SetUpdatedAt(v)
 	}
+
 	var (
 		err  error
 		node *JiangHuRen
@@ -293,6 +1048,305 @@ func (jhruo *JiangHuRenUpdateOne) sqlSave(ctx context.Context) (jhr *JiangHuRen,
 			Value:  value,
 			Column: jianghuren.FieldAge,
 		})
+	}
+	if value, ok := jhruo.mutation.Sex(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: jianghuren.FieldSex,
+		})
+	}
+	if jhruo.mutation.WeaponCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   jianghuren.WeaponTable,
+			Columns: []string{jianghuren.WeaponColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: weapon.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhruo.mutation.WeaponIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   jianghuren.WeaponTable,
+			Columns: []string{jianghuren.WeaponColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: weapon.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if jhruo.mutation.MenpaiCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   jianghuren.MenpaiTable,
+			Columns: []string{jianghuren.MenpaiColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: menpai.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhruo.mutation.MenpaiIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   jianghuren.MenpaiTable,
+			Columns: []string{jianghuren.MenpaiColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: menpai.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if jhruo.mutation.SpouseCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   jianghuren.SpouseTable,
+			Columns: []string{jianghuren.SpouseColumn},
+			Bidi:    true,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhruo.mutation.SpouseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   jianghuren.SpouseTable,
+			Columns: []string{jianghuren.SpouseColumn},
+			Bidi:    true,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if jhruo.mutation.MasterCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   jianghuren.MasterTable,
+			Columns: []string{jianghuren.MasterColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhruo.mutation.MasterIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   jianghuren.MasterTable,
+			Columns: []string{jianghuren.MasterColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := jhruo.mutation.RemovedApprenticesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   jianghuren.ApprenticesTable,
+			Columns: []string{jianghuren.ApprenticesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhruo.mutation.ApprenticesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   jianghuren.ApprenticesTable,
+			Columns: []string{jianghuren.ApprenticesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := jhruo.mutation.RemovedFollowersIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   jianghuren.FollowersTable,
+			Columns: jianghuren.FollowersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhruo.mutation.FollowersIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   jianghuren.FollowersTable,
+			Columns: jianghuren.FollowersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := jhruo.mutation.RemovedFollowingIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   jianghuren.FollowingTable,
+			Columns: jianghuren.FollowingPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhruo.mutation.FollowingIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   jianghuren.FollowingTable,
+			Columns: jianghuren.FollowingPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := jhruo.mutation.RemovedFriendsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   jianghuren.FriendsTable,
+			Columns: jianghuren.FriendsPrimaryKey,
+			Bidi:    true,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := jhruo.mutation.FriendsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   jianghuren.FriendsTable,
+			Columns: jianghuren.FriendsPrimaryKey,
+			Bidi:    true,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	jhr = &JiangHuRen{config: jhruo.config}
 	_spec.Assign = jhr.assignValues

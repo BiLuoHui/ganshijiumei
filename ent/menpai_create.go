@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/BiLuoHui/ganshijiumei/ent/jianghuren"
 	"github.com/BiLuoHui/ganshijiumei/ent/menpai"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
@@ -66,6 +67,21 @@ func (mpc *MenPaiCreate) SetNillableAddress(s *string) *MenPaiCreate {
 		mpc.SetAddress(*s)
 	}
 	return mpc
+}
+
+// AddDiscipleIDs adds the disciples edge to JiangHuRen by ids.
+func (mpc *MenPaiCreate) AddDiscipleIDs(ids ...int) *MenPaiCreate {
+	mpc.mutation.AddDiscipleIDs(ids...)
+	return mpc
+}
+
+// AddDisciples adds the disciples edges to JiangHuRen.
+func (mpc *MenPaiCreate) AddDisciples(j ...*JiangHuRen) *MenPaiCreate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return mpc.AddDiscipleIDs(ids...)
 }
 
 // Save creates the MenPai in the database.
@@ -162,6 +178,25 @@ func (mpc *MenPaiCreate) sqlSave(ctx context.Context) (*MenPai, error) {
 			Column: menpai.FieldAddress,
 		})
 		mp.Address = value
+	}
+	if nodes := mpc.mutation.DisciplesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   menpai.DisciplesTable,
+			Columns: []string{menpai.DisciplesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if err := sqlgraph.CreateNode(ctx, mpc.driver, _spec); err != nil {
 		if cerr, ok := isSQLConstraintError(err); ok {

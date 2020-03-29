@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/BiLuoHui/ganshijiumei/ent/jianghuren"
 	"github.com/BiLuoHui/ganshijiumei/ent/menpai"
 	"github.com/BiLuoHui/ganshijiumei/ent/predicate"
 	"github.com/facebookincubator/ent/dialect/sql"
@@ -54,12 +55,43 @@ func (mpu *MenPaiUpdate) SetNillableAddress(s *string) *MenPaiUpdate {
 	return mpu
 }
 
+// AddDiscipleIDs adds the disciples edge to JiangHuRen by ids.
+func (mpu *MenPaiUpdate) AddDiscipleIDs(ids ...int) *MenPaiUpdate {
+	mpu.mutation.AddDiscipleIDs(ids...)
+	return mpu
+}
+
+// AddDisciples adds the disciples edges to JiangHuRen.
+func (mpu *MenPaiUpdate) AddDisciples(j ...*JiangHuRen) *MenPaiUpdate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return mpu.AddDiscipleIDs(ids...)
+}
+
+// RemoveDiscipleIDs removes the disciples edge to JiangHuRen by ids.
+func (mpu *MenPaiUpdate) RemoveDiscipleIDs(ids ...int) *MenPaiUpdate {
+	mpu.mutation.RemoveDiscipleIDs(ids...)
+	return mpu
+}
+
+// RemoveDisciples removes disciples edges to JiangHuRen.
+func (mpu *MenPaiUpdate) RemoveDisciples(j ...*JiangHuRen) *MenPaiUpdate {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return mpu.RemoveDiscipleIDs(ids...)
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (mpu *MenPaiUpdate) Save(ctx context.Context) (int, error) {
 	if _, ok := mpu.mutation.UpdatedAt(); !ok {
 		v := menpai.UpdateDefaultUpdatedAt()
 		mpu.mutation.SetUpdatedAt(v)
 	}
+
 	var (
 		err      error
 		affected int
@@ -147,6 +179,44 @@ func (mpu *MenPaiUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: menpai.FieldAddress,
 		})
 	}
+	if nodes := mpu.mutation.RemovedDisciplesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   menpai.DisciplesTable,
+			Columns: []string{menpai.DisciplesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := mpu.mutation.DisciplesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   menpai.DisciplesTable,
+			Columns: []string{menpai.DisciplesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, mpu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{menpai.Label}
@@ -191,12 +261,43 @@ func (mpuo *MenPaiUpdateOne) SetNillableAddress(s *string) *MenPaiUpdateOne {
 	return mpuo
 }
 
+// AddDiscipleIDs adds the disciples edge to JiangHuRen by ids.
+func (mpuo *MenPaiUpdateOne) AddDiscipleIDs(ids ...int) *MenPaiUpdateOne {
+	mpuo.mutation.AddDiscipleIDs(ids...)
+	return mpuo
+}
+
+// AddDisciples adds the disciples edges to JiangHuRen.
+func (mpuo *MenPaiUpdateOne) AddDisciples(j ...*JiangHuRen) *MenPaiUpdateOne {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return mpuo.AddDiscipleIDs(ids...)
+}
+
+// RemoveDiscipleIDs removes the disciples edge to JiangHuRen by ids.
+func (mpuo *MenPaiUpdateOne) RemoveDiscipleIDs(ids ...int) *MenPaiUpdateOne {
+	mpuo.mutation.RemoveDiscipleIDs(ids...)
+	return mpuo
+}
+
+// RemoveDisciples removes disciples edges to JiangHuRen.
+func (mpuo *MenPaiUpdateOne) RemoveDisciples(j ...*JiangHuRen) *MenPaiUpdateOne {
+	ids := make([]int, len(j))
+	for i := range j {
+		ids[i] = j[i].ID
+	}
+	return mpuo.RemoveDiscipleIDs(ids...)
+}
+
 // Save executes the query and returns the updated entity.
 func (mpuo *MenPaiUpdateOne) Save(ctx context.Context) (*MenPai, error) {
 	if _, ok := mpuo.mutation.UpdatedAt(); !ok {
 		v := menpai.UpdateDefaultUpdatedAt()
 		mpuo.mutation.SetUpdatedAt(v)
 	}
+
 	var (
 		err  error
 		node *MenPai
@@ -281,6 +382,44 @@ func (mpuo *MenPaiUpdateOne) sqlSave(ctx context.Context) (mp *MenPai, err error
 			Value:  value,
 			Column: menpai.FieldAddress,
 		})
+	}
+	if nodes := mpuo.mutation.RemovedDisciplesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   menpai.DisciplesTable,
+			Columns: []string{menpai.DisciplesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := mpuo.mutation.DisciplesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   menpai.DisciplesTable,
+			Columns: []string{menpai.DisciplesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jianghuren.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	mp = &MenPai{config: mpuo.config}
 	_spec.Assign = mp.assignValues

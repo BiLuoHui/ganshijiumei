@@ -7,6 +7,7 @@ import (
 
 	"github.com/BiLuoHui/ganshijiumei/ent/predicate"
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their identifier.
@@ -491,6 +492,34 @@ func AddressEqualFold(v string) predicate.MenPai {
 func AddressContainsFold(v string) predicate.MenPai {
 	return predicate.MenPai(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldAddress), v))
+	})
+}
+
+// HasDisciples applies the HasEdge predicate on the "disciples" edge.
+func HasDisciples() predicate.MenPai {
+	return predicate.MenPai(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(DisciplesTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, DisciplesTable, DisciplesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasDisciplesWith applies the HasEdge predicate on the "disciples" edge with a given conditions (other predicates).
+func HasDisciplesWith(preds ...predicate.JiangHuRen) predicate.MenPai {
+	return predicate.MenPai(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(DisciplesInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, DisciplesTable, DisciplesColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 

@@ -4,10 +4,12 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
 
+	"github.com/BiLuoHui/ganshijiumei/ent/jianghuren"
 	"github.com/BiLuoHui/ganshijiumei/ent/menpai"
 	"github.com/BiLuoHui/ganshijiumei/ent/predicate"
 	"github.com/facebookincubator/ent/dialect/sql"
@@ -23,6 +25,8 @@ type MenPaiQuery struct {
 	order      []Order
 	unique     []string
 	predicates []predicate.MenPai
+	// eager-loading edges.
+	withDisciples *JiangHuRenQuery
 	// intermediate query.
 	sql *sql.Selector
 }
@@ -49,6 +53,18 @@ func (mpq *MenPaiQuery) Offset(offset int) *MenPaiQuery {
 func (mpq *MenPaiQuery) Order(o ...Order) *MenPaiQuery {
 	mpq.order = append(mpq.order, o...)
 	return mpq
+}
+
+// QueryDisciples chains the current query on the disciples edge.
+func (mpq *MenPaiQuery) QueryDisciples() *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: mpq.config}
+	step := sqlgraph.NewStep(
+		sqlgraph.From(menpai.Table, menpai.FieldID, mpq.sqlQuery()),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, menpai.DisciplesTable, menpai.DisciplesColumn),
+	)
+	query.sql = sqlgraph.SetNeighbors(mpq.driver.Dialect(), step)
+	return query
 }
 
 // First returns the first MenPai entity in the query. Returns *NotFoundError when no menpai was found.
@@ -220,6 +236,17 @@ func (mpq *MenPaiQuery) Clone() *MenPaiQuery {
 	}
 }
 
+//  WithDisciples tells the query-builder to eager-loads the nodes that are connected to
+// the "disciples" edge. The optional arguments used to configure the query builder of the edge.
+func (mpq *MenPaiQuery) WithDisciples(opts ...func(*JiangHuRenQuery)) *MenPaiQuery {
+	query := &JiangHuRenQuery{config: mpq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	mpq.withDisciples = query
+	return mpq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -263,8 +290,11 @@ func (mpq *MenPaiQuery) Select(field string, fields ...string) *MenPaiSelect {
 
 func (mpq *MenPaiQuery) sqlAll(ctx context.Context) ([]*MenPai, error) {
 	var (
-		nodes = []*MenPai{}
-		_spec = mpq.querySpec()
+		nodes       = []*MenPai{}
+		_spec       = mpq.querySpec()
+		loadedTypes = [1]bool{
+			mpq.withDisciples != nil,
+		}
 	)
 	_spec.ScanValues = func() []interface{} {
 		node := &MenPai{config: mpq.config}
@@ -277,6 +307,7 @@ func (mpq *MenPaiQuery) sqlAll(ctx context.Context) ([]*MenPai, error) {
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(values...)
 	}
 	if err := sqlgraph.QueryNodes(ctx, mpq.driver, _spec); err != nil {
@@ -285,6 +316,35 @@ func (mpq *MenPaiQuery) sqlAll(ctx context.Context) ([]*MenPai, error) {
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+
+	if query := mpq.withDisciples; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*MenPai)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.JiangHuRen(func(s *sql.Selector) {
+			s.Where(sql.InValues(menpai.DisciplesColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.men_pai_disciples
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "men_pai_disciples" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "men_pai_disciples" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Disciples = append(node.Edges.Disciples, n)
+		}
+	}
+
 	return nodes, nil
 }
 

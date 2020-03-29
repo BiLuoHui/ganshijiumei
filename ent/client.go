@@ -11,10 +11,12 @@ import (
 
 	"github.com/BiLuoHui/ganshijiumei/ent/jianghuren"
 	"github.com/BiLuoHui/ganshijiumei/ent/menpai"
+	"github.com/BiLuoHui/ganshijiumei/ent/weapon"
 	"github.com/BiLuoHui/ganshijiumei/ent/wugong"
 
 	"github.com/facebookincubator/ent/dialect"
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 )
 
 // Client is the client that holds all ent builders.
@@ -26,6 +28,8 @@ type Client struct {
 	JiangHuRen *JiangHuRenClient
 	// MenPai is the client for interacting with the MenPai builders.
 	MenPai *MenPaiClient
+	// Weapon is the client for interacting with the Weapon builders.
+	Weapon *WeaponClient
 	// WuGong is the client for interacting with the WuGong builders.
 	WuGong *WuGongClient
 }
@@ -43,6 +47,7 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.JiangHuRen = NewJiangHuRenClient(c.config)
 	c.MenPai = NewMenPaiClient(c.config)
+	c.Weapon = NewWeaponClient(c.config)
 	c.WuGong = NewWuGongClient(c.config)
 }
 
@@ -76,6 +81,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		config:     cfg,
 		JiangHuRen: NewJiangHuRenClient(cfg),
 		MenPai:     NewMenPaiClient(cfg),
+		Weapon:     NewWeaponClient(cfg),
 		WuGong:     NewWuGongClient(cfg),
 	}, nil
 }
@@ -107,6 +113,7 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	c.JiangHuRen.Use(hooks...)
 	c.MenPai.Use(hooks...)
+	c.Weapon.Use(hooks...)
 	c.WuGong.Use(hooks...)
 }
 
@@ -186,6 +193,118 @@ func (c *JiangHuRenClient) GetX(ctx context.Context, id int) *JiangHuRen {
 		panic(err)
 	}
 	return jhr
+}
+
+// QueryWeapon queries the weapon edge of a JiangHuRen.
+func (c *JiangHuRenClient) QueryWeapon(jhr *JiangHuRen) *WeaponQuery {
+	query := &WeaponQuery{config: c.config}
+	id := jhr.ID
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, id),
+		sqlgraph.To(weapon.Table, weapon.FieldID),
+		sqlgraph.Edge(sqlgraph.O2O, false, jianghuren.WeaponTable, jianghuren.WeaponColumn),
+	)
+	query.sql = sqlgraph.Neighbors(jhr.driver.Dialect(), step)
+
+	return query
+}
+
+// QueryMenpai queries the menpai edge of a JiangHuRen.
+func (c *JiangHuRenClient) QueryMenpai(jhr *JiangHuRen) *MenPaiQuery {
+	query := &MenPaiQuery{config: c.config}
+	id := jhr.ID
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, id),
+		sqlgraph.To(menpai.Table, menpai.FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, jianghuren.MenpaiTable, jianghuren.MenpaiColumn),
+	)
+	query.sql = sqlgraph.Neighbors(jhr.driver.Dialect(), step)
+
+	return query
+}
+
+// QuerySpouse queries the spouse edge of a JiangHuRen.
+func (c *JiangHuRenClient) QuerySpouse(jhr *JiangHuRen) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: c.config}
+	id := jhr.ID
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, id),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.O2O, false, jianghuren.SpouseTable, jianghuren.SpouseColumn),
+	)
+	query.sql = sqlgraph.Neighbors(jhr.driver.Dialect(), step)
+
+	return query
+}
+
+// QueryMaster queries the master edge of a JiangHuRen.
+func (c *JiangHuRenClient) QueryMaster(jhr *JiangHuRen) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: c.config}
+	id := jhr.ID
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, id),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, jianghuren.MasterTable, jianghuren.MasterColumn),
+	)
+	query.sql = sqlgraph.Neighbors(jhr.driver.Dialect(), step)
+
+	return query
+}
+
+// QueryApprentices queries the apprentices edge of a JiangHuRen.
+func (c *JiangHuRenClient) QueryApprentices(jhr *JiangHuRen) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: c.config}
+	id := jhr.ID
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, id),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, jianghuren.ApprenticesTable, jianghuren.ApprenticesColumn),
+	)
+	query.sql = sqlgraph.Neighbors(jhr.driver.Dialect(), step)
+
+	return query
+}
+
+// QueryFollowers queries the followers edge of a JiangHuRen.
+func (c *JiangHuRenClient) QueryFollowers(jhr *JiangHuRen) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: c.config}
+	id := jhr.ID
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, id),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, jianghuren.FollowersTable, jianghuren.FollowersPrimaryKey...),
+	)
+	query.sql = sqlgraph.Neighbors(jhr.driver.Dialect(), step)
+
+	return query
+}
+
+// QueryFollowing queries the following edge of a JiangHuRen.
+func (c *JiangHuRenClient) QueryFollowing(jhr *JiangHuRen) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: c.config}
+	id := jhr.ID
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, id),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, jianghuren.FollowingTable, jianghuren.FollowingPrimaryKey...),
+	)
+	query.sql = sqlgraph.Neighbors(jhr.driver.Dialect(), step)
+
+	return query
+}
+
+// QueryFriends queries the friends edge of a JiangHuRen.
+func (c *JiangHuRenClient) QueryFriends(jhr *JiangHuRen) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: c.config}
+	id := jhr.ID
+	step := sqlgraph.NewStep(
+		sqlgraph.From(jianghuren.Table, jianghuren.FieldID, id),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, jianghuren.FriendsTable, jianghuren.FriendsPrimaryKey...),
+	)
+	query.sql = sqlgraph.Neighbors(jhr.driver.Dialect(), step)
+
+	return query
 }
 
 // Hooks returns the client hooks.
@@ -271,9 +390,120 @@ func (c *MenPaiClient) GetX(ctx context.Context, id int) *MenPai {
 	return mp
 }
 
+// QueryDisciples queries the disciples edge of a MenPai.
+func (c *MenPaiClient) QueryDisciples(mp *MenPai) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: c.config}
+	id := mp.ID
+	step := sqlgraph.NewStep(
+		sqlgraph.From(menpai.Table, menpai.FieldID, id),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, menpai.DisciplesTable, menpai.DisciplesColumn),
+	)
+	query.sql = sqlgraph.Neighbors(mp.driver.Dialect(), step)
+
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *MenPaiClient) Hooks() []Hook {
 	return c.hooks.MenPai
+}
+
+// WeaponClient is a client for the Weapon schema.
+type WeaponClient struct {
+	config
+}
+
+// NewWeaponClient returns a client for the Weapon from the given config.
+func NewWeaponClient(c config) *WeaponClient {
+	return &WeaponClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `weapon.Hooks(f(g(h())))`.
+func (c *WeaponClient) Use(hooks ...Hook) {
+	c.hooks.Weapon = append(c.hooks.Weapon, hooks...)
+}
+
+// Create returns a create builder for Weapon.
+func (c *WeaponClient) Create() *WeaponCreate {
+	mutation := newWeaponMutation(c.config, OpCreate)
+	return &WeaponCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Weapon.
+func (c *WeaponClient) Update() *WeaponUpdate {
+	mutation := newWeaponMutation(c.config, OpUpdate)
+	return &WeaponUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *WeaponClient) UpdateOne(w *Weapon) *WeaponUpdateOne {
+	return c.UpdateOneID(w.ID)
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *WeaponClient) UpdateOneID(id int) *WeaponUpdateOne {
+	mutation := newWeaponMutation(c.config, OpUpdateOne)
+	mutation.id = &id
+	return &WeaponUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Weapon.
+func (c *WeaponClient) Delete() *WeaponDelete {
+	mutation := newWeaponMutation(c.config, OpDelete)
+	return &WeaponDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *WeaponClient) DeleteOne(w *Weapon) *WeaponDeleteOne {
+	return c.DeleteOneID(w.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *WeaponClient) DeleteOneID(id int) *WeaponDeleteOne {
+	builder := c.Delete().Where(weapon.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &WeaponDeleteOne{builder}
+}
+
+// Create returns a query builder for Weapon.
+func (c *WeaponClient) Query() *WeaponQuery {
+	return &WeaponQuery{config: c.config}
+}
+
+// Get returns a Weapon entity by its id.
+func (c *WeaponClient) Get(ctx context.Context, id int) (*Weapon, error) {
+	return c.Query().Where(weapon.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *WeaponClient) GetX(ctx context.Context, id int) *Weapon {
+	w, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return w
+}
+
+// QueryOwner queries the owner edge of a Weapon.
+func (c *WeaponClient) QueryOwner(w *Weapon) *JiangHuRenQuery {
+	query := &JiangHuRenQuery{config: c.config}
+	id := w.ID
+	step := sqlgraph.NewStep(
+		sqlgraph.From(weapon.Table, weapon.FieldID, id),
+		sqlgraph.To(jianghuren.Table, jianghuren.FieldID),
+		sqlgraph.Edge(sqlgraph.O2O, true, weapon.OwnerTable, weapon.OwnerColumn),
+	)
+	query.sql = sqlgraph.Neighbors(w.driver.Dialect(), step)
+
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *WeaponClient) Hooks() []Hook {
+	return c.hooks.Weapon
 }
 
 // WuGongClient is a client for the WuGong schema.

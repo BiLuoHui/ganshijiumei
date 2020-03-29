@@ -15,13 +15,39 @@ var (
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "age", Type: field.TypeUint},
+		{Name: "sex", Type: field.TypeBool},
+		{Name: "jiang_hu_ren_spouse", Type: field.TypeInt, Unique: true, Nullable: true},
+		{Name: "jiang_hu_ren_apprentices", Type: field.TypeInt, Nullable: true},
+		{Name: "men_pai_disciples", Type: field.TypeInt, Nullable: true},
 	}
 	// JiangHuRensTable holds the schema information for the "jiang_hu_rens" table.
 	JiangHuRensTable = &schema.Table{
-		Name:        "jiang_hu_rens",
-		Columns:     JiangHuRensColumns,
-		PrimaryKey:  []*schema.Column{JiangHuRensColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
+		Name:       "jiang_hu_rens",
+		Columns:    JiangHuRensColumns,
+		PrimaryKey: []*schema.Column{JiangHuRensColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "jiang_hu_rens_jiang_hu_rens_spouse",
+				Columns: []*schema.Column{JiangHuRensColumns[6]},
+
+				RefColumns: []*schema.Column{JiangHuRensColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "jiang_hu_rens_jiang_hu_rens_apprentices",
+				Columns: []*schema.Column{JiangHuRensColumns[7]},
+
+				RefColumns: []*schema.Column{JiangHuRensColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "jiang_hu_rens_men_pais_disciples",
+				Columns: []*schema.Column{JiangHuRensColumns[8]},
+
+				RefColumns: []*schema.Column{MenPaisColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// MenPaisColumns holds the columns for the "men_pais" table.
 	MenPaisColumns = []*schema.Column{
@@ -37,6 +63,31 @@ var (
 		Columns:     MenPaisColumns,
 		PrimaryKey:  []*schema.Column{MenPaisColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// WeaponsColumns holds the columns for the "weapons" table.
+	WeaponsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "name", Type: field.TypeString},
+		{Name: "level", Type: field.TypeInt},
+		{Name: "category", Type: field.TypeInt},
+		{Name: "jiang_hu_ren_weapon", Type: field.TypeInt, Unique: true, Nullable: true},
+	}
+	// WeaponsTable holds the schema information for the "weapons" table.
+	WeaponsTable = &schema.Table{
+		Name:       "weapons",
+		Columns:    WeaponsColumns,
+		PrimaryKey: []*schema.Column{WeaponsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "weapons_jiang_hu_rens_weapon",
+				Columns: []*schema.Column{WeaponsColumns[6]},
+
+				RefColumns: []*schema.Column{JiangHuRensColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// WuGongsColumns holds the columns for the "wu_gongs" table.
 	WuGongsColumns = []*schema.Column{
@@ -54,13 +105,78 @@ var (
 		PrimaryKey:  []*schema.Column{WuGongsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// JiangHuRenFollowingColumns holds the columns for the "jiang_hu_ren_following" table.
+	JiangHuRenFollowingColumns = []*schema.Column{
+		{Name: "jiang_hu_ren_id", Type: field.TypeInt},
+		{Name: "follower_id", Type: field.TypeInt},
+	}
+	// JiangHuRenFollowingTable holds the schema information for the "jiang_hu_ren_following" table.
+	JiangHuRenFollowingTable = &schema.Table{
+		Name:       "jiang_hu_ren_following",
+		Columns:    JiangHuRenFollowingColumns,
+		PrimaryKey: []*schema.Column{JiangHuRenFollowingColumns[0], JiangHuRenFollowingColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "jiang_hu_ren_following_jiang_hu_ren_id",
+				Columns: []*schema.Column{JiangHuRenFollowingColumns[0]},
+
+				RefColumns: []*schema.Column{JiangHuRensColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:  "jiang_hu_ren_following_follower_id",
+				Columns: []*schema.Column{JiangHuRenFollowingColumns[1]},
+
+				RefColumns: []*schema.Column{JiangHuRensColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
+	// JiangHuRenFriendsColumns holds the columns for the "jiang_hu_ren_friends" table.
+	JiangHuRenFriendsColumns = []*schema.Column{
+		{Name: "jiang_hu_ren_id", Type: field.TypeInt},
+		{Name: "friend_id", Type: field.TypeInt},
+	}
+	// JiangHuRenFriendsTable holds the schema information for the "jiang_hu_ren_friends" table.
+	JiangHuRenFriendsTable = &schema.Table{
+		Name:       "jiang_hu_ren_friends",
+		Columns:    JiangHuRenFriendsColumns,
+		PrimaryKey: []*schema.Column{JiangHuRenFriendsColumns[0], JiangHuRenFriendsColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "jiang_hu_ren_friends_jiang_hu_ren_id",
+				Columns: []*schema.Column{JiangHuRenFriendsColumns[0]},
+
+				RefColumns: []*schema.Column{JiangHuRensColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:  "jiang_hu_ren_friends_friend_id",
+				Columns: []*schema.Column{JiangHuRenFriendsColumns[1]},
+
+				RefColumns: []*schema.Column{JiangHuRensColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		JiangHuRensTable,
 		MenPaisTable,
+		WeaponsTable,
 		WuGongsTable,
+		JiangHuRenFollowingTable,
+		JiangHuRenFriendsTable,
 	}
 )
 
 func init() {
+	JiangHuRensTable.ForeignKeys[0].RefTable = JiangHuRensTable
+	JiangHuRensTable.ForeignKeys[1].RefTable = JiangHuRensTable
+	JiangHuRensTable.ForeignKeys[2].RefTable = MenPaisTable
+	WeaponsTable.ForeignKeys[0].RefTable = JiangHuRensTable
+	JiangHuRenFollowingTable.ForeignKeys[0].RefTable = JiangHuRensTable
+	JiangHuRenFollowingTable.ForeignKeys[1].RefTable = JiangHuRensTable
+	JiangHuRenFriendsTable.ForeignKeys[0].RefTable = JiangHuRensTable
+	JiangHuRenFriendsTable.ForeignKeys[1].RefTable = JiangHuRensTable
 }
